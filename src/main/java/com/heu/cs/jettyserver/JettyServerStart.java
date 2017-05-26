@@ -2,14 +2,9 @@ package com.heu.cs.jettyserver;
 
 
 import org.eclipse.jetty.server.Server;
-
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by memgq on 2017/5/14.

@@ -7,21 +7,21 @@ public class OrderPojo {
 private String orderId="";
     private EndLocationPojo endLocation;
     private StartLocationPojo startLocation;
-    private String sender = "";
-    private String receiver = "";
-    private String senderTel = "";
-    private String receiverTel = "";
-    private String goodsName = "";
-    private String orderOwnerId = "";
-    private String orderReceiverId = "";
-    private String remark = "";
-    private String sendTime = "";//期望配送员取物品时间
-    private String receiveTime = "";//期望物品送达时间
-    private String putOrderTime = "";//下单时间
-    private String receiveOrderTime = "";//接单时间
-    private String deliveryTime = "";//真正送达时间
-    private String imagePath = "";
-    private String orderStatus = "";
+    private String sender;
+    private String receiver;
+    private String senderTel;
+    private String receiverTel;
+    private String goodsName;
+    private String orderOwnerId;
+    private String orderReceiverId;
+    private String remark;
+    private String sendTime;//期望配送员取物品时间
+    private String receiveTime;//期望物品送达时间
+    private String putOrderTime;//下单时间
+    private String receiveOrderTime;//接单时间
+    private String deliveryTime;//真正送达时间
+    private String imagePath;
+    private String orderStatus;
 
     public String getOrderReceiverId() {
         return orderReceiverId;

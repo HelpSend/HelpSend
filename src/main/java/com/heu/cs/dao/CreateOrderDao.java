@@ -45,7 +45,7 @@ public class CreateOrderDao {
         order.setOrderStatus("0");
         order.setPutOrderTime(dateNowStr);
         if (imagePath.equals(ARTICLE_IMAGES_PATH)) {
-
+            order.setImagePath("");
         } else {
             order.setImagePath(imagePath);
         }

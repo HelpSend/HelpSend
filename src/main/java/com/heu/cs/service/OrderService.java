@@ -14,8 +14,6 @@ import javax.ws.rs.core.MediaType;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -102,11 +100,11 @@ public class OrderService {
     @Produces("text/plain")
     public String cteateOrderURL(@FormDataParam("photos") InputStream fileInputStream,
                                  @FormDataParam("photos") FormDataContentDisposition disposition,
-                                 @FormDataParam("orderinfo") String orderInfoStr) throws UnsupportedEncodingException {
+                                 @FormDataParam("orderinfo") String orderInfoStr){
         ReturnInfoPojo returnInfo = new ReturnInfoPojo();
         CreateOrderDao createOrderDao = new CreateOrderDao();
         System.out.println(orderInfoStr);
-        String imageName = URLDecoder.decode(disposition.getFileName(),"UTF-8");
+        String imageName = disposition.getFileName();
         Gson gson = new Gson();
         if (!imageName.equals("")) {
             imageName = Calendar.getInstance().getTimeInMillis() + imageName;
@@ -144,4 +142,16 @@ public class OrderService {
         result=queryNewOrderDao.queryNewOrder(orderOwnerId);
         return result;
     }
+
+    @GET
+    @Path("/queryneworderbystatus")
+//    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces("text/plain;charset=utf-8")
+    public String queryNewOrderByStatusURL(@QueryParam("orderOwnerId") String orderOwnerId) {
+        ReturnInfoPojo returnInfo = new ReturnInfoPojo();
+        QueryNewOrderDao queryNewOrderDao =new QueryNewOrderDao();
+        result=queryNewOrderDao.queryNewOrder(orderOwnerId);
+        return result;
+    }
+
 }

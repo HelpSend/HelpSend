@@ -16,7 +16,7 @@ public class FormatOrderData {
             if (obj.has(s)) {
 
             } else {
-                obj.addProperty(s, "");
+                obj.addProperty(s, "12345");
             }
         }
         for (String s : prop2) {
@@ -24,7 +24,7 @@ public class FormatOrderData {
 
             } else {
                 JsonObject object = new JsonObject();
-                object.addProperty("description", "");
+                object.addProperty("description", "测试位置");
                 object.addProperty("latitude", "");
                 object.addProperty("longitude", "");
                 obj.add(s, object);
