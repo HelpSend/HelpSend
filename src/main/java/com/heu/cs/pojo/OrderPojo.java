@@ -15,13 +15,24 @@ private String orderId="";
     private String orderOwnerId;
     private String orderReceiverId;
     private String remark;
-    private String sendTime;//期望配送员取物品时间
+    private String sendTime;//期望配送员取货时间
     private String receiveTime;//期望物品送达时间
     private String putOrderTime;//下单时间
     private String receiveOrderTime;//接单时间
     private String deliveryTime;//真正送达时间
     private String imagePath;
     private String orderStatus;
+    private String orderPrice;
+
+
+
+    public String getOrderPrice() {
+        return orderPrice;
+    }
+
+    public void setOrderPrice(String orderPrice) {
+        this.orderPrice = orderPrice;
+    }
 
     public String getOrderReceiverId() {
         return orderReceiverId;

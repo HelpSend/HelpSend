@@ -8,15 +8,15 @@ import com.google.gson.JsonObject;
 public class FormatOrderData {
     private String[] prop1 = {"orderId", "orderOwnerId", "orderReceiverId", "sender", "receiver",
             "senderTel", "receiverTel", "goodsName", "putOrderTime", "sendTime", "receiveTime",
-            "receiveOrderTime", "deliveryTime", "remark", "imagePath", "status"};
-    private String[] prop2 = {"startLocation", "endLocation",};
+            "receiveOrderTime", "deliveryTime", "remark", "imagePath", "status","orderPrice"};
+    private String[] prop2 = {"startLocation", "endLocation"};
 
     public JsonObject format(JsonObject obj) {
         for (String s : prop1) {
             if (obj.has(s)) {
 
             } else {
-                obj.addProperty(s, "12345");
+                obj.addProperty(s, "123");
             }
         }
         for (String s : prop2) {

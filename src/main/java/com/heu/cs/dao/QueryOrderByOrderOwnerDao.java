@@ -16,13 +16,13 @@ import java.util.ArrayList;
 /**
  * Created by memgq on 2017/5/17.
  */
-public class QueryNewOrderDao {
+public class QueryOrderByOrderOwnerDao {
     private static final String operateSuccess = "1";
     private static final  String operateFailure = "0";
 
-    public QueryNewOrderDao() { }
+    public QueryOrderByOrderOwnerDao() { }
 
-    public String queryNewOrder(String orderOwnerId){
+    public String queryNewOrder(String orderOwnerId,String orderStatus){
 
         Gson gson=new Gson();
         try{
