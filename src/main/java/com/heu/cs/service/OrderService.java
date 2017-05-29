@@ -26,9 +26,10 @@ public class OrderService {
      * Constants operating with images
      */
     private static final String ROOTPATH = System.getProperty("user.dir");
-    private static final String ARTICLE_IMAGES_PATH = "/src/main/resources/upload_images/";
+    private static final String ROOT_IMAGES_PATH = "/src/main/resources";
     private static final String JPG_CONTENT_TYPE = "image/jpeg";
     private static final String PNG_CONTENT_TYPE = "image/png";
+    private static final String IMAGE_URL="/upload_images/";
 
 
 
@@ -61,40 +62,6 @@ public class OrderService {
     }
 
 
-    @POST
-    @Path("/createorder1")
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Produces("text/plain;charset=utf-8")
-    public String cteateOrderURL1(@FormDataParam("photos") InputStream fileInputStream,
-                                 @FormDataParam("photos") FormDataContentDisposition disposition,
-                                 @FormDataParam("orderinfo") String orderInfoStr) {
-        ReturnInfoPojo returnInfo = new ReturnInfoPojo();
-        CreateOrderDao createOrderDao = new CreateOrderDao();
-        String imageName = disposition.getFileName();
-        Gson gson = new Gson();
-        if (!imageName.equals("")) {
-            imageName = Calendar.getInstance().getTimeInMillis() + imageName;
-            String status = createOrderDao.insertOrder(orderInfoStr, ARTICLE_IMAGES_PATH + imageName);
-            File file = new File(ROOTPATH + ARTICLE_IMAGES_PATH + imageName);
-            try {
-                //使用common io的文件写入操作
-                FileUtils.copyInputStreamToFile(fileInputStream, file);
-                returnInfo.setStatus(status);
-                returnInfo.setMessage("图片上传成功，下单成功");
-                return gson.toJson(returnInfo);
-            } catch (IOException ex) {
-                Logger.getLogger(UploadFileService.class.getName()).log(Level.SEVERE, null, ex);
-                returnInfo.setStatus("0");
-                returnInfo.setMessage("IOError");
-                return gson.toJson(returnInfo);
-            }
-        } else {
-            String status = createOrderDao.insertOrder(orderInfoStr, ARTICLE_IMAGES_PATH);
-            returnInfo.setStatus(status);
-            returnInfo.setMessage("下单成功");
-            return gson.toJson(returnInfo);
-        }
-    }
 
 
     /**
@@ -119,8 +86,8 @@ public class OrderService {
         if (!imageName.equals("")) {
             imageName = Calendar.getInstance().getTimeInMillis() + imageName;
             System.out.println(imageName);
-            String status = createOrderDao.insertOrder(orderInfoStr, ARTICLE_IMAGES_PATH + imageName);
-            File file = new File(ROOTPATH + ARTICLE_IMAGES_PATH + imageName);
+            String status = createOrderDao.insertOrder(orderInfoStr, IMAGE_URL + imageName);
+            File file = new File(ROOTPATH + ROOT_IMAGES_PATH+IMAGE_URL+ imageName);
             try {
                 //使用common io的文件写入操作
                 FileUtils.copyInputStreamToFile(fileInputStream, file);
@@ -134,7 +101,7 @@ public class OrderService {
                 return gson.toJson(returnInfo);
             }
         } else {
-            String status = createOrderDao.insertOrder(orderInfoStr, ARTICLE_IMAGES_PATH);
+            String status = createOrderDao.insertOrder(orderInfoStr, IMAGE_URL);
             returnInfo.setStatus(status);
             returnInfo.setMessage("下单成功");
             return gson.toJson(returnInfo);
@@ -198,10 +165,20 @@ public class OrderService {
     @GET
     @Path("/graborder")
     @Produces("text/plain;charset=utf-8")
-    public String grabOrderURL(){
+    public String grabOrderURL(@QueryParam("latitude") String latitude,@QueryParam("longitude") String longitude){
         GrabOrderDao grabOrderDao=new GrabOrderDao();
-        String result=grabOrderDao.grabOrder();
+        String result=grabOrderDao.grabOrder(latitude,longitude);
         return result;
     }
+
+    @GET
+    @Path("/graborderdetails")
+    @Produces("text/plain;charset=utf-8")
+    public String grabOrderDetailsURL(@QueryParam("orderId") String orderId){
+        GrabOrderDetailsDao grabOrderDetailsDao=new GrabOrderDetailsDao();
+        String result=grabOrderDetailsDao.grabOrderDetails(orderId);
+        return result;
+    }
+
 
 }

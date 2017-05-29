@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script src="http://cdn.bootcss.com/jquery/3.2.1/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    function doServerUpload() {
+        var formData = new FormData($( "#serveruploadForm" )[0]);
+        console.log($( "#serveruploadForm" )[0])
+        $.ajax({
+            url: 'http://mengqipoet.cn:8080/webapi/order/createorder',
+            //url: '/webapi/order/createorder',
+            type: 'POST',
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (returndata) {
+
+                console.log(returndata);
+            },
+            error: function (returndata) {
+                console.log(returndata);
+            }
+        });
+    }
+
+    function doLocalUpload() {
+        var formData = new FormData($( "#localuploadForm" )[0]);
+        console.log($( "#localuploadForm" )[0])
+        $.ajax({
+            //url: 'http://mengqipoet.cn:8080/webapi/order/createorder',
+            url: '/webapi/order/createorder',
+            type: 'POST',
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (returndata) {
+
+                console.log(returndata);
+            },
+            error: function (returndata) {
+                console.log(returndata);
+            }
+        });
+    }
+</script>
+<div>本地上传</div>
+<form id= "localuploadForm" >
+    <p >指定文件名： <input type="text" id="locahorderinfo" name="orderinfo" value= ""/></p >
+    <p >上传文件： <input type="file" name="photos"/></p>
+    <input type="button" value="上传" onclick="doLocalUpload()" />
+</form>
+<div>远程服务器上传</div>
+<form id= "serveruploadForm" >
+    <p >指定文件名： <input type="text" id="serverorderinfo" name="orderinfo" value= ""/></p >
+    <p >上传文件： <input type="file" name="photos"/></p>
+    <input type="button" value="上传" onclick="doServerUpload()" />
+</form>
+
+</body>
+</html>

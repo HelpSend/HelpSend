@@ -19,7 +19,8 @@ import java.util.Date;
 public class CreateOrderDao {
     private static final String operateSuccess = "1";
     private static final  String operateFailure = "0";
-    private static final String ARTICLE_IMAGES_PATH = "/src/main/resources/upload_images/";
+    private static final String IMAGE_URL="/upload_images/";
+    private static final String PROJECT_URL="http://mengqipoet.cn:8080";
 
     public CreateOrderDao() {
     }
@@ -43,10 +44,10 @@ public class CreateOrderDao {
         OrderPojo order = gson.fromJson(obj, OrderPojo.class);
         order.setOrderStatus("0");
         order.setPutOrderTime(dateNowStr);
-        if (imagePath.equals(ARTICLE_IMAGES_PATH)) {
+        if (imagePath.equals(IMAGE_URL)) {
             order.setImagePath("");
         } else {
-            order.setImagePath(imagePath);
+            order.setImagePath(PROJECT_URL+imagePath);
         }
         orderStr = gson.toJson(order);
         try {
