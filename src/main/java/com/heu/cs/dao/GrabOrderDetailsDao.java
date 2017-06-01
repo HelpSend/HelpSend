@@ -19,8 +19,8 @@ public class GrabOrderDetailsDao {
         Gson gson=new Gson();
         ReturnInfoPojo returnInfoPojo=new ReturnInfoPojo();
         String returnResult="";
+        ConnMongoDB connMongoDB=new ConnMongoDB();
         try{
-            ConnMongoDB connMongoDB=new ConnMongoDB();
             MongoCollection orderCollection = connMongoDB.getCollection("bbddb", "normalorder");
             MongoCollection userCollection = connMongoDB.getCollection("bbddb", "user");
             Document userDocument = new Document();
@@ -59,14 +59,14 @@ public class GrabOrderDetailsDao {
                 returnInfoPojo.setMessage("未找到此订单");
                 returnResult=gson.toJson(returnInfoPojo,ReturnInfoPojo.class);
             }
-            connMongoDB.getMongoClient().close();
-            return returnResult;
         }catch (Exception e){
             e.printStackTrace();
             returnInfoPojo.setStatus(operateFailure);
             returnInfoPojo.setMessage("网络连接失败");
-            return gson.toJson(returnInfoPojo,ReturnInfoPojo.class);
+            returnResult= gson.toJson(returnInfoPojo,ReturnInfoPojo.class);
+        }finally {
+            connMongoDB.getMongoClient().close();
+            return returnResult;
         }
-
     }
 }

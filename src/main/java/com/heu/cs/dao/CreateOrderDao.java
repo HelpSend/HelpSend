@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.heu.cs.pojo.OrderPojo;
+import com.heu.cs.pojo.ReturnInfoPojo;
 import com.mongodb.client.MongoCollection;
 import com.heu.cs.conndb.ConnMongoDB;
 import org.bson.Document;
@@ -33,6 +34,7 @@ public class CreateOrderDao {
         /**
          * 先转成jsonObject ,然后格式化看有没有漏掉的字段，有的话加上
          */
+        String operateResult="";
         Date d = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateNowStr = sdf.format(d);
@@ -49,16 +51,19 @@ public class CreateOrderDao {
             order.setImagePath(PROJECT_URL+imagePath);
         }
         orderStr = gson.toJson(order);
+        ConnMongoDB connMongoDB = new ConnMongoDB();
         try {
-            ConnMongoDB connMongoDB = new ConnMongoDB();
             MongoCollection collection = connMongoDB.getCollection("bbddb", "normalorder");
             Document document = Document.parse(orderStr);
             collection.insertOne(document);
-            connMongoDB.getMongoClient().close();
-            return operateSuccess;
+            operateResult=operateSuccess;
+
         } catch (Exception exception) {
             exception.printStackTrace();
-            return operateFailure;
+            operateResult=operateFailure;
+        }finally {
+            connMongoDB.getMongoClient().close();
+            return operateResult;
         }
 
     }

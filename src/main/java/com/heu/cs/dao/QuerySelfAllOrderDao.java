@@ -6,6 +6,7 @@ import com.heu.cs.pojo.OrderPojo;
 import com.heu.cs.pojo.QueryOrderResponsePojo;
 import com.heu.cs.pojo.ReturnInfoPojo;
 import com.mongodb.MongoClientException;
+import com.mongodb.MongoException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
@@ -21,9 +22,11 @@ public class QuerySelfAllOrderDao {
 
     public String querySelfAllOrder(String orderOwnerId){
         Gson gson=new Gson();
+        ReturnInfoPojo returnInfo=new ReturnInfoPojo();
+        String result="";
+        ArrayList<OrderPojo> res=new ArrayList<OrderPojo>();
+        ConnMongoDB connMongoDB=new ConnMongoDB();
         try{
-            ArrayList<OrderPojo> res=new ArrayList<OrderPojo>();
-            ConnMongoDB connMongoDB=new ConnMongoDB();
             MongoCollection collection = connMongoDB.getCollection("bbddb", "normalorder");
             Document document=new Document();
             document.append("orderOwnerId",orderOwnerId);
@@ -34,17 +37,24 @@ public class QuerySelfAllOrderDao {
                 OrderPojo order = gson.fromJson(d.toJson(), OrderPojo.class);
                 res.add(order);
             }
-            connMongoDB.getMongoClient().close();
+
             QueryOrderResponsePojo queryOrderResponse=new QueryOrderResponsePojo();
             queryOrderResponse.setStatus(operateSuccess);
             queryOrderResponse.setMessage(res);
-            return  gson.toJson(queryOrderResponse,QueryOrderResponsePojo.class);
-        }catch (MongoClientException e){
+            result=gson.toJson(queryOrderResponse,QueryOrderResponsePojo.class);
+        }catch (MongoException e){
             e.printStackTrace();
-            ReturnInfoPojo returnInfo=new ReturnInfoPojo();
             returnInfo.setStatus(operateFailure);
-            returnInfo.setMessage("MongoClient Error");
-            return gson.toJson(returnInfo,ReturnInfoPojo.class);
+            returnInfo.setMessage("数据查询失败");
+            result=gson.toJson(returnInfo,ReturnInfoPojo.class);
+        }catch (Exception e){
+            e.printStackTrace();
+            returnInfo.setStatus(operateFailure);
+            returnInfo.setMessage("操作失败");
+            result=gson.toJson(returnInfo,ReturnInfoPojo.class);
+        }finally {
+            connMongoDB.getMongoClient().close();
+            return result;
         }
     }
 }

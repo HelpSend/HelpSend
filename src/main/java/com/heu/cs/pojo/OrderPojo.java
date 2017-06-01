@@ -1,5 +1,9 @@
 package com.heu.cs.pojo;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by memgq on 2017/5/17.
  */
@@ -176,5 +180,15 @@ private String orderId="";
 
     public void setOrderStatus(String orderStatus) {
         this.orderStatus = orderStatus;
+    }
+
+    public List<String> getAttributes(){
+        List<String> attrs=new ArrayList<String>();
+        Field[] field=this.getClass().getDeclaredFields();
+        for(int j=0 ; j<field.length ; j++) {     //遍历所有属性
+            String name = field[j].getName();
+            attrs.add(name);
+        }
+        return attrs;
     }
 }

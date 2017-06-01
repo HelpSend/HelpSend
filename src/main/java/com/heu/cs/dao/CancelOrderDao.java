@@ -1,6 +1,8 @@
 package com.heu.cs.dao;
 
+import com.google.gson.Gson;
 import com.heu.cs.conndb.ConnMongoDB;
+import com.heu.cs.pojo.ReturnInfoPojo;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
@@ -13,8 +15,11 @@ public class CancelOrderDao {
     private static final  String operateFailure = "0";
 
     public String cancelOrder(String orderId){
+        ConnMongoDB connMongoDB=new ConnMongoDB();
+        Gson gson=new Gson();
+        String operateResult="";
+        ReturnInfoPojo returnInfoPojo=new ReturnInfoPojo();
         try{
-            ConnMongoDB connMongoDB=new ConnMongoDB();
             MongoCollection collection= connMongoDB.getCollection("bbddb","normalorder");
             Document filter = new Document();
             filter.append("_id", orderId);
@@ -22,10 +27,21 @@ public class CancelOrderDao {
             update.append("$set", new Document("orderStatus", "-1"));
             collection.updateOne(filter, update);
             connMongoDB.getMongoClient().close();
-            return operateSuccess;
+            returnInfoPojo.setStatus(operateSuccess);
+            returnInfoPojo.setMessage("成功取消订单");
         }catch (MongoException e){
             e.printStackTrace();
-            return operateFailure;
+            returnInfoPojo.setStatus(operateFailure);
+            returnInfoPojo.setMessage("操作失败，请稍后重试");
+        }catch (Exception e){
+            e.printStackTrace();
+            returnInfoPojo.setStatus(operateFailure);
+            returnInfoPojo.setMessage("操作失败，请稍后重试");
+        }
+        finally {
+            connMongoDB.getMongoClient().close();
+            operateResult=gson.toJson(returnInfoPojo,ReturnInfoPojo.class);
+            return operateResult;
         }
 
     }
