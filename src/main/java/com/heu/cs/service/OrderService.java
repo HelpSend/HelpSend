@@ -142,8 +142,8 @@ public class OrderService {
     @Produces("text/plain;charset=utf-8")
     public String queryOrderByURL(@QueryParam("orderOwnerId") String orderOwnerId,
                                   @QueryParam("orderStatus") String orderStatus) {
-        QueryOrderByOrderOwnerDao queryOrderByOrderOwnerDao = new QueryOrderByOrderOwnerDao();
-        String result = queryOrderByOrderOwnerDao.queryNewOrder(orderOwnerId, orderStatus);
+        QuerySelfOrderByStatusDao querySelfOrderByStatusDao = new QuerySelfOrderByStatusDao();
+        String result = querySelfOrderByStatusDao.queryNewOrder(orderOwnerId, orderStatus);
         return result;
     }
 

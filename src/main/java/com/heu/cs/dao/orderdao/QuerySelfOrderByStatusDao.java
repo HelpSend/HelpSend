@@ -12,12 +12,13 @@ import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
  * Created by memgq on 2017/5/17.
  */
-public class QueryOrderByOrderOwnerDao {
+public class QuerySelfOrderByStatusDao {
     private  final String operateSuccess = "1";
     private  final String operateFailure = "0";
 
@@ -26,12 +27,12 @@ public class QueryOrderByOrderOwnerDao {
         Gson gson = new Gson();
         ReturnInfoPojo returnInfo = new ReturnInfoPojo();
         String result = "";
-        ArrayList<OrderPojo> resList = new ArrayList<OrderPojo>();
+        List<OrderPojo> resList = new ArrayList<OrderPojo>();
         ConnMongoDB connMongoDB = new ConnMongoDB();
         try {
             MongoCollection collection = connMongoDB.getCollection("bbddb", "normalorder");
             Document document = new Document();
-            document.append("orderOwnerId", orderOwnerId).append("orderStatus", "0");
+            document.append("orderOwnerId", orderOwnerId).append("orderStatus", orderStatus);
             FindIterable<Document> findIterable = collection.find(document);
             for (Document d : findIterable) {
                 //  JsonObject obj = new JsonParser().parse(d.toString()).getAsJsonObject();
@@ -42,11 +43,6 @@ public class QueryOrderByOrderOwnerDao {
             queryOrderResponse.setStatus(operateSuccess);
             queryOrderResponse.setMessage(resList);
             result = gson.toJson(queryOrderResponse, QueryOrderResponsePojo.class);
-        } catch (MongoException mongoException) {
-            mongoException.printStackTrace();
-            returnInfo.setStatus(operateFailure);
-            returnInfo.setMessage("操作失败");
-            result = gson.toJson(returnInfo, ReturnInfoPojo.class);
         } catch (Exception e) {
             e.printStackTrace();
             returnInfo.setStatus(operateFailure);
