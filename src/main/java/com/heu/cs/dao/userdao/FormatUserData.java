@@ -2,7 +2,6 @@ package com.heu.cs.dao.userdao;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.heu.cs.pojo.OrderPojo;
 import com.heu.cs.pojo.UserPojo;
 
 import java.util.List;

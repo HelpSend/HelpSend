@@ -1,17 +1,9 @@
 package com.heu.cs.timertask;
 
 import com.heu.cs.pojo.OrderPojo;
-import com.heu.cs.service.OrderService;
-import com.mongodb.client.FindIterable;
-import org.bson.Document;
-
 import javax.servlet.ServletContext;
 import java.util.List;
-import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
-
-import static com.heu.cs.timertask.Factory.factory;
 import static com.heu.cs.timertask.Factory.groupGrabOrder;
 
 /**

@@ -5,8 +5,6 @@ import com.heu.cs.conndb.ConnMongoDB;
 import com.heu.cs.pojo.OrderPojo;
 import com.heu.cs.pojo.QueryOrderResponsePojo;
 import com.heu.cs.pojo.ReturnInfoPojo;
-import com.mongodb.MongoClientException;
-import com.mongodb.MongoException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;

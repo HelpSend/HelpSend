@@ -4,8 +4,6 @@ package com.heu.cs.timertask;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by memgq on 2017/6/1.

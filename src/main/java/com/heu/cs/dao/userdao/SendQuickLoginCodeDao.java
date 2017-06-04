@@ -2,7 +2,6 @@ package com.heu.cs.dao.userdao;
 
 import com.google.gson.Gson;
 import com.heu.cs.conndb.ConnMongoDB;
-import com.heu.cs.pojo.UserPojo;
 import com.heu.cs.pojo.VrfCodeResponsePojo;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
