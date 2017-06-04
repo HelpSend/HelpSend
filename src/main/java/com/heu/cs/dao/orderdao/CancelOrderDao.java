@@ -1,4 +1,4 @@
-package com.heu.cs.dao;
+package com.heu.cs.dao.orderdao;
 
 import com.google.gson.Gson;
 import com.heu.cs.conndb.ConnMongoDB;
@@ -11,8 +11,8 @@ import org.bson.Document;
  * Created by memgq on 2017/5/28.
  */
 public class CancelOrderDao {
-    private static final String operateSuccess = "1";
-    private static final  String operateFailure = "0";
+    private  final String operateSuccess = "1";
+    private  final  String operateFailure = "0";
 
     public String cancelOrder(String orderId){
         ConnMongoDB connMongoDB=new ConnMongoDB();

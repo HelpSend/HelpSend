@@ -1,15 +1,15 @@
 package com.heu.cs.jettyserver;
 
 
+import org.apache.log4j.BasicConfigurator;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerCollection;
-import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.webapp.WebAppContext;
-import org.glassfish.jersey.jaxb.internal.XmlCollectionJaxbProvider;
+
 
 /**
  * Created by memgq on 2017/5/14.
@@ -48,6 +48,7 @@ public class JettyServerStart {
 //        }
 
 
+        BasicConfigurator.configure();
         Server jettyServer = new Server(8080);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
@@ -62,18 +63,19 @@ public class JettyServerStart {
         staticServlet.setInitParameter("resourceBase", "src/main/resources");
         staticServlet.setInitParameter("pathInfoOnly", "true");
 
-        WebAppContext appContext = new WebAppContext();
-        // 设置描述符位置
-        appContext.setDescriptor("./web/WEB-INF/web.xml");
-        // 设置Web内容上下文路径
-        appContext.setResourceBase("./web");
-        // 设置上下文路径
-        appContext.setContextPath("/");
-        appContext.setParentLoaderPriority(true);
+ //       WebAppContext appContext = new WebAppContext();
+//        // 设置描述符位置
+//        appContext.setDescriptor("./web/WEB-INF/web.xml");
+//        // 设置Web内容上下文路径
+//        appContext.setResourceBase("./web");
+////        // 设置上下文路径
+////        appContext.setContextPath("/");
+//        appContext.setParentLoaderPriority(true);
 
 
         HandlerCollection handlers = new HandlerCollection();
-        handlers.setHandlers(new Handler[]{context,appContext});
+       // handlers.setHandlers(new Handler[]{context,appContext});
+        handlers.setHandlers(new Handler[]{context});
         jettyServer.setHandler(handlers);
 
         try {

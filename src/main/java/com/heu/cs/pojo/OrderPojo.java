@@ -29,7 +29,6 @@ private String orderId="";
     private String orderPrice;
 
 
-
     public String getOrderPrice() {
         return orderPrice;
     }

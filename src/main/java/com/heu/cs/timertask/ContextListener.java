@@ -26,7 +26,7 @@ public class ContextListener implements ServletContextListener{
          */
         timer = new java.util.Timer(true);
 
-      //  arg0.getServletContext().log("定时器已启动");
+        arg0.getServletContext().log("定时器已启动");
 
         /**
          * 定时器到指定的时间时,执行某个操作(如某个类,或方法)
@@ -50,7 +50,7 @@ public class ContextListener implements ServletContextListener{
 //        timer.schedule(new DelFileTask(arg0.getServletContext()), date);
 
 
-        //arg0.getServletContext().log("已经添加任务调度表");
+        arg0.getServletContext().log("已经添加任务调度表");
 
     }
 

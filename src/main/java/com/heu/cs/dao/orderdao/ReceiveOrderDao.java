@@ -1,4 +1,4 @@
-package com.heu.cs.dao;
+package com.heu.cs.dao.orderdao;
 
 import com.google.gson.Gson;
 import com.heu.cs.conndb.ConnMongoDB;
@@ -12,8 +12,8 @@ import org.bson.Document;
  * Created by memgq on 2017/5/21.
  */
 public class ReceiveOrderDao {
-    private String operateSuccess="1";
-    private String operateFailure="0";
+    private final String operateSuccess="1";
+    private final String operateFailure="0";
 
 
     public String receiveOrder(String orderId,String orderReceiverId) {

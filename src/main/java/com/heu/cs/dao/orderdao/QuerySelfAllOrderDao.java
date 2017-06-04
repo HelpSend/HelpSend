@@ -1,4 +1,4 @@
-package com.heu.cs.dao;
+package com.heu.cs.dao.orderdao;
 
 import com.google.gson.Gson;
 import com.heu.cs.conndb.ConnMongoDB;
@@ -17,8 +17,8 @@ import java.util.ArrayList;
  * Created by memgq on 2017/5/28.
  */
 public class QuerySelfAllOrderDao {
-    private static final String operateSuccess = "1";
-    private static final  String operateFailure = "0";
+    private  final String operateSuccess = "1";
+    private  final  String operateFailure = "0";
 
     public String querySelfAllOrder(String orderOwnerId){
         Gson gson=new Gson();
@@ -34,6 +34,7 @@ public class QuerySelfAllOrderDao {
             sortDocument.append("orderStatus",-1);
             FindIterable<Document> findIterable=collection.find(document).sort(sortDocument);
             for(Document d:findIterable){
+
                 OrderPojo order = gson.fromJson(d.toJson(), OrderPojo.class);
                 res.add(order);
             }

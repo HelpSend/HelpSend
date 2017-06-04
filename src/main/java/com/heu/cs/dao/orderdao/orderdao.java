@@ -1,4 +1,4 @@
-package com.heu.cs.dao;
+package com.heu.cs.dao.orderdao;
 
 /**
  * Created by memgq on 2017/5/17.

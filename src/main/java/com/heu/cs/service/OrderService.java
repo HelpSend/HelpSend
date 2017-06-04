@@ -2,11 +2,8 @@ package com.heu.cs.service;
 
 
 import com.google.gson.Gson;
-import com.heu.cs.cache.Group;
-import com.heu.cs.cache.GroupCacheFactory;
-import com.heu.cs.dao.*;
+import com.heu.cs.dao.orderdao.*;
 import com.heu.cs.pojo.ReturnInfoPojo;
-import com.heu.cs.timertask.MyTask;
 import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -21,11 +18,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.util.Calendar;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.heu.cs.timertask.Factory.groupGrabOrder;
 
 /**
  * Created by memgq on 2017/5/14.
@@ -68,9 +63,9 @@ public class OrderService {
      * @return
      */
     @GET
-    @Path("/receiveorder;charset=utf-8")
+    @Path("/receiveorder")
 //    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces("text/plain;charset=utf-8")
     public String receiveOrderURL(@QueryParam("orderId") String orderId,
                                   @QueryParam("orderReceiverId") String orderReceiverId) {
         ReceiveOrderDao receiveOrderDao = new ReceiveOrderDao();
@@ -184,7 +179,7 @@ public class OrderService {
 
 
     /**
-     * 抢单，查询附近所有的没人接的订单，并按照期望配送员取物品时间降序排列
+     * 抢单，查询附近(NEARBY)一定距离内所有的没人接的订单，并按照期望配送员取物品时间降序排列
      *
      * @return
      */
@@ -192,13 +187,16 @@ public class OrderService {
     @Path("/graborder")
     @Produces("text/plain;charset=utf-8")
     public String grabOrderURL(@QueryParam("latitude") String latitude, @QueryParam("longitude") String longitude) throws ParseException {
-
-
         GrabOrderDao grabOrderDao = new GrabOrderDao();
         String result = grabOrderDao.grabOrder(latitude, longitude);
         return result;
     }
 
+    /**
+     * 根据订单Id查询订单详情
+     * @param orderId
+     * @return
+     */
     @GET
     @Path("/graborderdetails")
     @Produces("text/plain;charset=utf-8")

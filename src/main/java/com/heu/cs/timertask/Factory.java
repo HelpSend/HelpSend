@@ -10,4 +10,5 @@ public interface Factory {
 
     public GroupCacheFactory factory=new GroupCacheFactory();
     public Group groupGrabOrder=factory.group("groupGrabOrder");
+
 }

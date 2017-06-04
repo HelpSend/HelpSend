@@ -2,31 +2,35 @@ package com.heu.cs.timertask;
 
 import com.google.gson.Gson;
 import com.heu.cs.conndb.ConnMongoDB;
-import com.heu.cs.dao.CancelOrderDao;
+import com.heu.cs.dao.orderdao.CancelOrderDao;
 import com.heu.cs.pojo.OrderPojo;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
-import java.text.DecimalFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
+
 
 /**
  * Created by memgq on 2017/6/1.
  */
 public class GrabOrderTask {
+    private final DateTimeFormatter formatDateTime = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+    private final String formatDateStr="yyyy-MM-dd";
+    private final String timezero=" 23:59:59";
+
     public List<OrderPojo> getOrderList(){
         Gson gson=new Gson();
         List<OrderPojo> orderPojoList=new ArrayList<OrderPojo>();
         ConnMongoDB connMongoDB=new ConnMongoDB();
         FindIterable<Document> findIterable;
-        Date nowTime=new Date();
-        String nowTimeStamp=nowTime.getTime()/1000+"";
+        DateTime nowDateTime=new DateTime();
+        Long nowTimestamp=nowDateTime.getMillis();
         try{
             MongoCollection collection = connMongoDB.getCollection("bbddb", "normalorder");
             Document document = new Document();
@@ -36,17 +40,16 @@ public class GrabOrderTask {
             findIterable = collection.find(document).sort(sortDocument).limit(20);
             for(Document d:findIterable){
                 OrderPojo order = gson.fromJson(d.toJson(), OrderPojo.class);
-                String receiveTimeStamp=parseData(order.getReceiveTime());
-                if(Integer.parseInt(receiveTimeStamp)>Integer.parseInt(nowTimeStamp)){
+                long receiveTimeStamp=getTimestamp(order.getReceiveTime());
+                if(receiveTimeStamp>nowTimestamp){
                     order.setOrderId(d.get("_id").toString());
-                    order.setSendTime(formatSendTime(order.getSendTime(),nowTimeStamp));
-                    order.setReceiveTime(formatReceiveTime(order.getReceiveTime())+" 之前");
+                    order.setSendTime(formatSendTime(order.getSendTime(),nowTimestamp));
+                    order.setReceiveTime(formatReceiveTime(order.getReceiveTime(),nowDateTime)+" 之前");
                     orderPojoList.add(order);
                 }else{
                     CancelOrderDao cancelOrderDao=new CancelOrderDao();
                     String cancelOrderResult=cancelOrderDao.cancelOrder(d.get("_id").toString());
                 }
-
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -59,59 +62,52 @@ public class GrabOrderTask {
 
 
 
+
+
+
+    public long getTimestamp(String t){
+        DateTime dateTime= formatDateTime.parseDateTime(t);
+        return dateTime.getMillis();
+    }
+
     /**
      * 设置显示的期望货物送达时间
-     * @param t
+     * @param orderReceiveTime
      * @return
      * @throws ParseException
      */
-    public String formatReceiveTime(String t) throws ParseException {
+    public String formatReceiveTime(String orderReceiveTime,DateTime nowDateTime) throws ParseException {
         String returnTime="";
-        String timezero=" 23:59:59";
-        String[] tlist=t.split(" ");
-        String receiveTimeStamp= parseData(t);
-        Calendar now = Calendar.getInstance();
-        String today=now.get(Calendar.YEAR)+"-"+(now.get(Calendar.MONTH)+1)+"-"+now.get(Calendar.DAY_OF_MONTH);
-        String todayTimeStamp=parseData(today+timezero);
-        int todayTimeInt= Integer.parseInt(todayTimeStamp);
-        int receiveTimeInt=Integer.parseInt(receiveTimeStamp);
-        if(receiveTimeInt<=todayTimeInt&&receiveTimeInt>now.getTimeInMillis()/1000){
+        String[] tlist=orderReceiveTime.split(" ");
+        Long receiveTimeStamp= getTimestamp(orderReceiveTime);
+        String todayStr= nowDateTime.toString(formatDateStr);
+        long todayTimeStamp=getTimestamp(todayStr+timezero);
+        if(receiveTimeStamp<=todayTimeStamp&&receiveTimeStamp>nowDateTime.getMillis()){
             returnTime="今天 "+tlist[1];
-        }else if (receiveTimeInt<=todayTimeInt+24*60*60&&receiveTimeInt>todayTimeInt){
+        }else if (receiveTimeStamp<=todayTimeStamp+24*60*60&&receiveTimeStamp>todayTimeStamp){
             returnTime="明天 "+tlist[1];
-        }else if (receiveTimeInt<=todayTimeInt+48*60*60&&receiveTimeInt>todayTimeInt+24*60*60){
+        }else if (receiveTimeStamp<=todayTimeStamp+48*60*60&&receiveTimeStamp>todayTimeStamp+24*60*60){
             returnTime="后天 "+tlist[1];
         }else {
-            returnTime=t;
+            returnTime=orderReceiveTime;
         }
         return returnTime;
 
     }
 
 
-    /**
-     * 将字符串日期转成时间戳
-     * @param t
-     * @return
-     * @throws ParseException
-     */
-    public String parseData(String t) throws ParseException {
-        SimpleDateFormat simpleDateFormat =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date d=simpleDateFormat.parse(t);
-        return d.getTime()/1000+"";
-    }
 
     /**
      * 设置显示的取货时间
      * @param orderSendTime
-     * @param nowTimeStamp
+     * @param nowTimestamp
      * @return
      * @throws ParseException
      */
-    private String formatSendTime(String orderSendTime,String nowTimeStamp) throws ParseException {
+    private String formatSendTime(String orderSendTime,Long nowTimestamp) {
         String sendTime="";
-        String sendTimeStamp=parseData(orderSendTime);
-        int r= Integer.parseInt(sendTimeStamp)-Integer.parseInt(nowTimeStamp);
+        Long sendTimestamp=getTimestamp(orderSendTime);
+        long r= sendTimestamp-nowTimestamp;
         if(r<=20*60){
             sendTime="立即";
         }else if (r<=30*60&&r>20*60){

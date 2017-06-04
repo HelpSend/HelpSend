@@ -1,4 +1,4 @@
-package com.heu.cs.dao;
+package com.heu.cs.dao.orderdao;
 
 import com.google.gson.JsonObject;
 import com.heu.cs.pojo.OrderPojo;
@@ -23,7 +23,7 @@ public class FormatOrderData {
                     JsonObject object =addLocation("45.771437","126.686118");
                     obj.add(s, object);
                 }else {
-                    obj.addProperty(s, "123");
+                    obj.addProperty(s, "1234");
                 }
             }
         }

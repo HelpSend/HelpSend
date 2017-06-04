@@ -44,7 +44,7 @@ public class MyTask extends TimerTask {
 
         if (!isRunning) {
 
-            //context.log("开始执行指定任务");
+            context.log("开始执行指定任务");
             /**
              * 自己的业务代码
              */
@@ -53,10 +53,10 @@ public class MyTask extends TimerTask {
             groupGrabOrder.push("firstGrab",this.getOrderPojoList(),2);
             groupGrabOrder.push("secondGrab",this.getOrderPojoList(),3);
             isRunning = false;
-            //context.log("指定任务执行结束");
+            context.log("指定任务执行结束");
 
         } else {
-            //context.log("上一次任务执行还未结束");
+            context.log("上一次任务执行还未结束");
         }
     }
 }

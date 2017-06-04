@@ -1,4 +1,4 @@
-package com.heu.cs.dao;
+package com.heu.cs.dao.orderdao;
 
 import com.google.gson.Gson;
 import com.heu.cs.conndb.ConnMongoDB;
@@ -18,8 +18,8 @@ import java.util.ArrayList;
  * Created by memgq on 2017/5/17.
  */
 public class QueryOrderByOrderOwnerDao {
-    private static final String operateSuccess = "1";
-    private static final String operateFailure = "0";
+    private  final String operateSuccess = "1";
+    private  final String operateFailure = "0";
 
 
     public String queryNewOrder(String orderOwnerId, String orderStatus) {
