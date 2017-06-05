@@ -228,4 +228,15 @@ public class OrderService {
         String  result=queryMyReceiveOrderDao.queryMyReceiveOrder(orderReceiverId,orderStatus);
         return result;
     }
+
+
+
+    @GET
+    @Path("/queryorderprogress")
+    @Produces("text/plain;charset=utf-8")
+    public String queryOrderProgressURL(@QueryParam("orderId") String orderId) {
+        QueryOrderProgressDao queryOrderProgressDao=new QueryOrderProgressDao();
+        String result=queryOrderProgressDao.queryOrderProgress(orderId);
+        return result;
+    }
 }
