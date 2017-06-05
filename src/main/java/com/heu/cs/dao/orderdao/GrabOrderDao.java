@@ -2,6 +2,8 @@ package com.heu.cs.dao.orderdao;
 
 import com.google.gson.Gson;
 import com.heu.cs.conndb.ConnMongoDB;
+import com.heu.cs.generalmethod.GenericDao;
+import com.heu.cs.generalmethod.GenericDaoImpl;
 import com.heu.cs.pojo.*;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -257,11 +259,8 @@ public class GrabOrderDao {
             findIterable = collection.find(document).sort(sortDocument).limit(20);
             for(Document d:findIterable){
                 OrderPojo order = gson.fromJson(d.toJson(), OrderPojo.class);
-                if(order.getOrderId().equals("1234")){
-                    Document update = new Document();
-                    update.append("$set", new Document("orderId",d.get("_id").toString()));
-                    collection.updateOne(d, update);
-                }
+                GenericDaoImpl genericDao =new GenericDaoImpl();
+                genericDao.updateOrderId(d,collection);
                 long receiveTimeStamp=getTimestamp(order.getReceiveTime());
                 if(receiveTimeStamp>nowTimestamp){
                     order.setOrderId(d.get("_id").toString());

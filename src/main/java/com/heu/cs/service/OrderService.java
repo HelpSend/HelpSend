@@ -41,11 +41,11 @@ public class OrderService {
     /**
      * Constants operating with images
      */
-    private static final String ROOTPATH = System.getProperty("user.dir");
-    private static final String ROOT_IMAGES_PATH = "/src/main/resources";
-    private static final String JPG_CONTENT_TYPE = "image/jpeg";
-    private static final String PNG_CONTENT_TYPE = "image/png";
-    private static final String IMAGE_URL = "/upload_images/";
+    private  final String ROOTPATH = System.getProperty("user.dir");
+    private  final String ROOT_IMAGES_PATH = "/src/main/resources";
+    private  final String JPG_CONTENT_TYPE = "image/jpeg";
+    private  final String PNG_CONTENT_TYPE = "image/png";
+    private  final String IMAGE_URL = "/upload_images/";
 
 
     @GET
@@ -207,4 +207,25 @@ public class OrderService {
     }
 
 
+    @GET
+    @Path("/querymyputorder")
+    @Produces("text/plain;charset=utf-8")
+    public String queryMyPlaceOrderURL(@QueryParam("orderOwnerId") String orderOwnerId,
+                                       @QueryParam("orderStatus") String orderStatus) {
+        QueryMyPutOrderDao queryMyPutOrderDao=new QueryMyPutOrderDao();
+        String  result=queryMyPutOrderDao.queryMyPutOrder(orderOwnerId,orderStatus);
+        return result;
+    }
+
+
+
+    @GET
+    @Path("/querymyreceiveorder")
+    @Produces("text/plain;charset=utf-8")
+    public String queryMyReceiveOrderURL(@QueryParam("orderReceiverId") String orderReceiverId,
+                                         @QueryParam("orderStatus") String orderStatus) {
+        QueryMyReceiveOrderDao queryMyReceiveOrderDao=new QueryMyReceiveOrderDao();
+        String  result=queryMyReceiveOrderDao.queryMyReceiveOrder(orderReceiverId,orderStatus);
+        return result;
+    }
 }

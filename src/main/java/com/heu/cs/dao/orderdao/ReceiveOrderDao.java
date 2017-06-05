@@ -3,8 +3,12 @@ package com.heu.cs.dao.orderdao;
 import com.google.gson.Gson;
 import com.heu.cs.conndb.ConnMongoDB;
 import com.heu.cs.pojo.ReturnInfoPojo;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.joda.time.DateTime;
 
 
 /**
@@ -13,31 +17,85 @@ import org.bson.Document;
 public class ReceiveOrderDao {
     private final String operateSuccess="1";
     private final String operateFailure="0";
-
-
+    private final String SUCCUSSMSG="接单成功";
+    private final String FAILUREMSG="接单失败";
     public String receiveOrder(String orderId,String orderReceiverId) {
-        Gson gson = new Gson();
         ReturnInfoPojo returnInfo = new ReturnInfoPojo();
         String result = "";
-        ConnMongoDB connMongoDB = new ConnMongoDB();
-        try {
-            MongoCollection collection = connMongoDB.getCollection("bbddb", "normalorder");
-            Document filter = new Document();
-            filter.append("orderId", orderId);
-            Document update = new Document();
-            update.append("$set", new Document("orderReceiverId", orderReceiverId));
-            update.append("$set", new Document("orderStatus", "1"));
-            collection.updateOne(filter, update);
-            returnInfo.setStatus(operateSuccess);
-            returnInfo.setMessage("接单成功");
-        } catch (Exception e) {
-            e.printStackTrace();
+        Gson gson = new Gson();
+        if(isHelper(orderReceiverId)){
+            ConnMongoDB connMongoDB = new ConnMongoDB();
+            try {
+                MongoCollection collection = connMongoDB.getCollection("bbddb", "normalorder");
+                Document filter = new Document();
+                filter.append("orderId", orderId);
+                FindIterable<Document> findIterable=collection.find(filter);
+                MongoCursor<Document> mongoCursor=findIterable.iterator();
+                if(mongoCursor.hasNext()){
+                    Document d=mongoCursor.next();
+                    if(d.get("orderStatus").equals("0")){
+                        DateTime dateTime=new DateTime();
+                        Document update = new Document();
+                        Document newValue=new Document();
+                        newValue.append("orderReceiverId", orderReceiverId)
+                                .append("orderStatus", "1")
+                                .append("receiveOrderTime", dateTime.toString("yyyy-MM-dd HH:mm:ss"));
+                        update.append("$set", newValue);
+                        collection.updateOne(d, update);
+                        returnInfo.setStatus(operateSuccess);
+                        returnInfo.setMessage(SUCCUSSMSG);
+                    }else {
+                        returnInfo.setStatus(operateFailure);
+                        returnInfo.setMessage(FAILUREMSG);
+                    }
+
+                }else {
+                    returnInfo.setStatus(operateFailure);
+                    returnInfo.setMessage(FAILUREMSG);
+                }
+                mongoCursor.close();
+                connMongoDB.getMongoClient().close();
+                result=gson.toJson(returnInfo,ReturnInfoPojo.class);
+                return result;
+            } catch (Exception e) {
+                e.printStackTrace();
+                returnInfo.setStatus(operateFailure);
+                returnInfo.setMessage(FAILUREMSG);
+                result=gson.toJson(returnInfo,ReturnInfoPojo.class);
+                return result;
+            }
+        }else {
             returnInfo.setStatus(operateFailure);
-            returnInfo.setMessage("接单失败");
-        }finally {
-            connMongoDB.getMongoClient().close();
+            returnInfo.setMessage("请先成为帮带员");
             result=gson.toJson(returnInfo,ReturnInfoPojo.class);
             return result;
+        }
+
+    }
+
+
+    private boolean isHelper(String orderReceiverId){
+        ConnMongoDB connMongoDB = new ConnMongoDB();
+        MongoCollection collection = connMongoDB.getCollection("bbddb", "user");
+        Document userDocument = new Document();
+        userDocument.append("_id", new ObjectId(orderReceiverId));
+        FindIterable<Document> findIterable=collection.find(userDocument);
+        MongoCursor<Document> userCursor=findIterable.iterator();
+        if(userCursor.hasNext()) {
+            Document d = userCursor.next();
+            if(d.get("role").equals("1")){
+                userCursor.close();
+                connMongoDB.getMongoClient().close();
+                return true;
+            }else {
+                userCursor.close();
+                connMongoDB.getMongoClient().close();
+                return false;
+            }
+        }else {
+            userCursor.close();
+            connMongoDB.getMongoClient().close();
+            return false;
         }
     }
 }
