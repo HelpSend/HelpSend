@@ -6,7 +6,7 @@ import org.bson.Document;
 /**
  * Created by memgq on 2017/6/5.
  */
-public interface GenericDao {
+public interface GenericInterface {
 
     String getTimeDif(String targetTime);
 

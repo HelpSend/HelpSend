@@ -2,6 +2,9 @@ package com.heu.cs.dao.userdao;
 
 import com.google.gson.Gson;
 import com.heu.cs.conndb.ConnMongoDB;
+import com.heu.cs.generalmethod.GenerateVerificationCode;
+import com.heu.cs.generalmethod.SMSApi;
+import com.heu.cs.generalmethod.SMSApiInterface;
 import com.heu.cs.pojo.VrfCodeResponsePojo;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -26,8 +29,8 @@ public class SendQuickLoginCodeDao {
         GenerateVerificationCode generateVerificationCode=new GenerateVerificationCode();
         String verificationCode=generateVerificationCode.generateCode();
         String textTemplate=TEXT+verificationCode;
-        SMSApi smsApi=new SMSApi();
-        String returnMsg=smsApi.sendSms(textTemplate,telNumber);
+        SMSApiInterface smsApiInterface =new SMSApi();
+        String returnMsg= smsApiInterface.sendSms(textTemplate,telNumber);
         Gson gson=new Gson();
         VrfCodeResponsePojo vrfCodeResponsePojo=gson.fromJson(returnMsg,VrfCodeResponsePojo.class);
         if(vrfCodeResponsePojo.getCode().equals(0)){

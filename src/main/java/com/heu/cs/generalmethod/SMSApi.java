@@ -1,4 +1,4 @@
-package com.heu.cs.dao.userdao;
+package com.heu.cs.generalmethod;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -19,7 +19,7 @@ import org.apache.http.util.EntityUtils;
 /**
  * Created by memgq on 2017/6/3.
  */
-public class SMSApi {
+public class SMSApi implements SMSApiInterface {
     //查账户信息的http地址
     private  final String URI_GET_USER_INFO = "https://sms.yunpian.com/v2/user/get.json";
 
@@ -50,6 +50,7 @@ public class SMSApi {
      * @throws java.io.IOException
      */
 
+    @Override
     public  String getUserInfo() throws IOException, URISyntaxException {
         Map<String, String> params = new HashMap<String, String>();
         params.put("apikey", apikey);
@@ -65,6 +66,7 @@ public class SMSApi {
      * @throws IOException
      */
 
+    @Override
     public  String sendSms(String text, String mobile) throws IOException {
         Map<String, String> params = new HashMap<String, String>();
         params.put("apikey", apikey);
@@ -83,6 +85,7 @@ public class SMSApi {
      * @return
      */
 
+    @Override
     public  String sendVoice(String apikey, String mobile, String code) {
         Map<String, String> params = new HashMap<String, String>();
         params.put("apikey", apikey);
@@ -100,7 +103,8 @@ public class SMSApi {
      * @return
      */
 
-    public  String bindCall(String apikey, String from, String to , Integer duration ) {
+    @Override
+    public  String bindCall(String apikey, String from, String to, Integer duration) {
         Map<String, String> params = new HashMap<String, String>();
         params.put("apikey", apikey);
         params.put("from", from);
@@ -116,6 +120,7 @@ public class SMSApi {
      * @param to   被叫
      * @return
      */
+    @Override
     public  String unbindCall(String apikey, String from, String to) {
         Map<String, String> params = new HashMap<String, String>();
         params.put("apikey", apikey);
@@ -132,6 +137,7 @@ public class SMSApi {
      * @return 提交响应
      */
 
+    @Override
     public  String post(String url, Map<String, String> paramsMap) {
         CloseableHttpClient client = HttpClients.createDefault();
         String responseText = "";

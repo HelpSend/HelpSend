@@ -2,16 +2,13 @@ package com.heu.cs.dao.orderdao;
 
 import com.google.gson.Gson;
 import com.heu.cs.conndb.ConnMongoDB;
-import com.heu.cs.generalmethod.GenericDao;
-import com.heu.cs.generalmethod.GenericDaoImpl;
+import com.heu.cs.generalmethod.GenericInterfaceImpl;
 import com.heu.cs.pojo.*;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import java.text.DecimalFormat;
+
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +31,7 @@ public class GrabOrderDao {
         ReturnInfoPojo returnInfo=new ReturnInfoPojo();
         List<OrderPojo> orderPojoList= getOrderList();
         if(orderPojoList.size()>0) {
-            GenericDaoImpl genericDao=new GenericDaoImpl();
+            GenericInterfaceImpl genericDao=new GenericInterfaceImpl();
             for (OrderPojo order : orderPojoList) {
                 String distance = genericDao.getDistance(latitude, longitude, order.getStartLocation().getLatitude(), order.getStartLocation().getLongitude());
                 if (Double.parseDouble(distance) < NEARBY) {
@@ -116,7 +113,7 @@ public class GrabOrderDao {
      * @return
      * @throws ParseException
      */
-    public String formatReceiveTime(String orderReceiveTime,DateTime nowDateTime,GenericDaoImpl genericDao) throws ParseException {
+    public String formatReceiveTime(String orderReceiveTime,DateTime nowDateTime,GenericInterfaceImpl genericDao) throws ParseException {
         String returnTime="";
         String[] tlist=orderReceiveTime.split(" ");
         Long receiveTimeStamp= genericDao.getTimestamp(orderReceiveTime);
@@ -144,7 +141,7 @@ public class GrabOrderDao {
      * @return
      * @throws ParseException
      */
-    private String formatSendTime(String orderSendTime,Long nowTimestamp,GenericDaoImpl genericDao) {
+    private String formatSendTime(String orderSendTime,Long nowTimestamp,GenericInterfaceImpl genericDao) {
         String sendTime="";
         Long sendTimestamp=genericDao.getTimestamp(orderSendTime);
         long r= sendTimestamp-nowTimestamp;
@@ -194,7 +191,7 @@ public class GrabOrderDao {
             Document sortDocument=new Document();
             sortDocument.append("sendTime",1);
             findIterable = collection.find(document).sort(sortDocument).limit(20);
-            GenericDaoImpl genericDao=new GenericDaoImpl();
+            GenericInterfaceImpl genericDao=new GenericInterfaceImpl();
             for(Document d:findIterable){
                 OrderPojo order = gson.fromJson(d.toJson(), OrderPojo.class);
                 genericDao.updateOrderId(d,collection);

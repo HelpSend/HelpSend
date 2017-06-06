@@ -2,15 +2,12 @@ package com.heu.cs.dao.orderdao;
 
 import com.google.gson.Gson;
 import com.heu.cs.conndb.ConnMongoDB;
-import com.heu.cs.generalmethod.GenericDaoImpl;
+import com.heu.cs.generalmethod.GenericInterfaceImpl;
 import com.heu.cs.pojo.MyPutOrderPojo;
 import com.heu.cs.pojo.OrderPojo;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import org.bson.Document;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 
@@ -36,7 +33,7 @@ public class QueryMyPutOrderDao {
         MongoCursor<Document> mongoCursor= collection.find(filter).sort(sortDocument).limit(20).iterator();
         while (mongoCursor.hasNext()){
             Document d=mongoCursor.next();
-            GenericDaoImpl genericDao =new GenericDaoImpl();
+            GenericInterfaceImpl genericDao =new GenericInterfaceImpl();
             genericDao.updateOrderId(d,collection);
             OrderPojo orderPojo=gson.fromJson(d.toJson(),OrderPojo.class);
             MyPutOrderPojo myPOP=new MyPutOrderPojo();
