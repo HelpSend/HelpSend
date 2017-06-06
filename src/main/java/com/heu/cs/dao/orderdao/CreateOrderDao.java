@@ -42,6 +42,8 @@ public class CreateOrderDao {
         OrderPojo order = gson.fromJson(obj, OrderPojo.class);
         order.setOrderStatus("0");
         order.setPutOrderTime(dateNowStr);
+        order.setReceiverTel(order.getReceiverTel().replace("-",""));
+        order.setSenderTel(order.getSenderTel().replace("-",""));
         GenericMethod genericDao = new GenericMethod();
         order.setOrderPrice(genericDao.setPrice(genericDao.getDistance(order.getStartLocation().getLatitude(),
                 order.getStartLocation().getLongitude(), order.getEndLocation().getLatitude(), order.getEndLocation().getLongitude())));

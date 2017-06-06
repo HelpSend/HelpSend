@@ -28,31 +28,26 @@ public class ReceiveOrderDao {
             try {
                 MongoCollection collection = connMongoDB.getCollection("bbddb", "normalorder");
                 Document filter = new Document();
-                filter.append("orderId", orderId);
+                filter.append("_id", new ObjectId(orderId));
                 FindIterable<Document> findIterable=collection.find(filter);
                 MongoCursor<Document> mongoCursor=findIterable.iterator();
-                if(mongoCursor.hasNext()){
-                    Document d=mongoCursor.next();
-                    if(d.get("orderStatus").equals("0")){
-                        DateTime dateTime=new DateTime();
-                        Document update = new Document();
-                        Document newValue=new Document();
-                        newValue.append("orderReceiverId", orderReceiverId)
-                                .append("orderStatus", "1")
-                                .append("receiveOrderTime", dateTime.toString("yyyy-MM-dd HH:mm:ss"));
-                        update.append("$set", newValue);
-                        collection.updateOne(d, update);
-                        returnInfo.setStatus(operateSuccess);
-                        returnInfo.setMessage(SUCCUSSMSG);
-                    }else {
-                        returnInfo.setStatus(operateFailure);
-                        returnInfo.setMessage(FAILUREMSG);
-                    }
-
+                Document d=mongoCursor.next();
+                if(d.get("orderStatus").equals("0")){
+                    DateTime dateTime=new DateTime();
+                    Document update = new Document();
+                    Document newValue=new Document();
+                    newValue.append("orderReceiverId", orderReceiverId)
+                            .append("orderStatus", "1")
+                            .append("receiveOrderTime", dateTime.toString("yyyy-MM-dd HH:mm:ss"));
+                    update.append("$set", newValue);
+                    collection.updateOne(d, update);
+                    returnInfo.setStatus(operateSuccess);
+                    returnInfo.setMessage(SUCCUSSMSG);
                 }else {
                     returnInfo.setStatus(operateFailure);
                     returnInfo.setMessage(FAILUREMSG);
                 }
+
                 mongoCursor.close();
                 connMongoDB.getMongoClient().close();
                 result=gson.toJson(returnInfo,ReturnInfoPojo.class);

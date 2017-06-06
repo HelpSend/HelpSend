@@ -32,7 +32,7 @@ public class DeliveryOrderDao {
         String goodsName=document.getString("goodsName");
         //发送验证码
         GenerateVerificationCode generateVerificationCode = new GenerateVerificationCode();
-        String replyCode = generateVerificationCode.generateCode();
+        String replyCode = generateVerificationCode.generateCode(6);
         String text ="【帮帮带】物品["+goodsName+"]已送达，请回复验证码"+replyCode+"完成此订单。";
         SMSApi smsApi = new SMSApi();
         String replymsg = smsApi.sendSms(text, mobile);
@@ -42,8 +42,7 @@ public class DeliveryOrderDao {
             Document update = new Document();
             Document newValue = new Document();
             DateTime dateTime = new DateTime();
-            newValue.append("orderStatus", "2")
-                    .append("deliveryTime", dateTime.toString("yyyy-MM-dd HH:mm:ss"))
+            newValue.append("deliveryTime", dateTime.toString("yyyy-MM-dd HH:mm:ss"))
                     .append("orderReplyCode", replyCode);
             update.append("$set", newValue);
             collection.updateOne(document, update);

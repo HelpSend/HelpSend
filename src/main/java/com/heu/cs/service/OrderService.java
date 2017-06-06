@@ -242,12 +242,12 @@ public class OrderService {
 
 
 
-    @POST
+    @GET
     @Path("/deliveryorder")
     @Produces("text/plain;charset=utf-8")
-    public String deliveryOrderURL(@QueryParam("orderId") String orderId) {
+    public String deliveryOrderURL(@QueryParam("orderId") String orderId) throws IOException {
         DeliveryOrderDao deliveryOrderDao=new DeliveryOrderDao();
-        String result="";
+        String result=deliveryOrderDao.deliveryOrder(orderId);
         return result;
     }
 }

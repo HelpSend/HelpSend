@@ -27,7 +27,7 @@ public class SendQuickLoginCodeDao {
         preCreateUser(telNumber);
         String resultStr="";
         GenerateVerificationCode generateVerificationCode=new GenerateVerificationCode();
-        String verificationCode=generateVerificationCode.generateCode();
+        String verificationCode=generateVerificationCode.generateCode(4);
         String textTemplate=TEXT+verificationCode;
         SMSApiInterface smsApiInterface =new SMSApi();
         String returnMsg= smsApiInterface.sendSms(textTemplate,telNumber);

@@ -38,7 +38,7 @@ public class GenericMethod implements GenericMethodInterface {
 
     @Override
     public void updateOrderId(Document document, MongoCollection collection){
-        if(document.get("orderId").equals("1234")){
+        if(document.get("orderId").equals("")){
         Document update = new Document();
         update.append("$set", new Document("orderId",document.get("_id").toString()));
         collection.updateOne(document, update);
