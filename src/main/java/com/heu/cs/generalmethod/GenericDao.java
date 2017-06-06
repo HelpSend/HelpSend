@@ -13,4 +13,11 @@ public interface GenericDao {
     long getTimestamp(String t);
 
     void updateOrderId(Document document, MongoCollection collection);
+
+
+    double rad(double d);
+
+    String  getDistance(String lat1Str, String lng1Str, String lat2Str, String lng2Str);
+
+    String setPrice(String diatance);
 }
