@@ -239,4 +239,15 @@ public class OrderService {
         String result=queryOrderProgressDao.queryOrderProgress(orderId);
         return result;
     }
+
+
+
+    @POST
+    @Path("/deliveryorder")
+    @Produces("text/plain;charset=utf-8")
+    public String deliveryOrderURL(@QueryParam("orderId") String orderId) {
+        DeliveryOrderDao deliveryOrderDao=new DeliveryOrderDao();
+        String result="";
+        return result;
+    }
 }
