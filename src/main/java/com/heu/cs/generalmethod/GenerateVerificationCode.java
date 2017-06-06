@@ -5,7 +5,7 @@ import java.util.Random;
 /**
  * Created by memgq on 2017/6/3.
  */
-public class GenerateVerificationCode implements GenerateVerificationCodeImpl {
+public class GenerateVerificationCode implements GenerateVerificationCodeInterface {
     private static final int MAX=9999;
     private static final int MIN=1001;
 

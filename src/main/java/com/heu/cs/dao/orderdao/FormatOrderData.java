@@ -23,7 +23,7 @@ public class FormatOrderData {
                     JsonObject object =addLocation("45.771437","126.686118");
                     obj.add(s, object);
                 }else {
-                    obj.addProperty(s, "1234");
+                    obj.addProperty(s, "");
                 }
             }
         }

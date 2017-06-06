@@ -6,7 +6,7 @@ import org.bson.Document;
 /**
  * Created by memgq on 2017/6/5.
  */
-public interface GenericInterface {
+public interface GenericMethodInterface {
 
     String getTimeDif(String targetTime);
 

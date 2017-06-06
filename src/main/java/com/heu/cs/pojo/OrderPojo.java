@@ -27,7 +27,24 @@ private String orderId="";
     private String imagePath;
     private String orderStatus;
     private String orderPrice;
+    private String orderReplyCode;
+    private String emergency;
 
+    public String getEmergency() {
+        return emergency;
+    }
+
+    public void setEmergency(String emergency) {
+        this.emergency = emergency;
+    }
+
+    public String getOrderReplyCode() {
+        return orderReplyCode;
+    }
+
+    public void setOrderReplyCode(String orderReplyCode) {
+        this.orderReplyCode = orderReplyCode;
+    }
 
     public String getOrderPrice() {
         return orderPrice;

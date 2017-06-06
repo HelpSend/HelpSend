@@ -2,7 +2,7 @@ package com.heu.cs.dao.orderdao;
 
 import com.google.gson.Gson;
 import com.heu.cs.conndb.ConnMongoDB;
-import com.heu.cs.generalmethod.GenericInterfaceImpl;
+import com.heu.cs.generalmethod.GenericMethod;
 import com.heu.cs.pojo.MyPutOrderPojo;
 import com.heu.cs.pojo.OrderPojo;
 import com.mongodb.client.MongoCollection;
@@ -33,7 +33,7 @@ public class QueryMyPutOrderDao {
         MongoCursor<Document> mongoCursor= collection.find(filter).sort(sortDocument).limit(20).iterator();
         while (mongoCursor.hasNext()){
             Document d=mongoCursor.next();
-            GenericInterfaceImpl genericDao =new GenericInterfaceImpl();
+            GenericMethod genericDao =new GenericMethod();
             genericDao.updateOrderId(d,collection);
             OrderPojo orderPojo=gson.fromJson(d.toJson(),OrderPojo.class);
             MyPutOrderPojo myPOP=new MyPutOrderPojo();

@@ -1,32 +1,60 @@
 package com.heu.cs.dao.orderdao;
 
+import com.google.gson.Gson;
 import com.heu.cs.conndb.ConnMongoDB;
+import com.heu.cs.generalmethod.GenerateVerificationCode;
+import com.heu.cs.generalmethod.GenerateVerificationCodeInterface;
+import com.heu.cs.generalmethod.GenericMethod;
+import com.heu.cs.generalmethod.SMSApi;
+import com.heu.cs.pojo.ReturnInfoPojo;
+import com.heu.cs.pojo.VrfCodeResponsePojo;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import org.bson.Document;
 import org.joda.time.DateTime;
 
-import javax.print.Doc;
+import java.io.IOException;
 
 /**
  * Created by memgq on 2017/6/6.
  */
 public class DeliveryOrderDao {
-    public String deliveryOrder(String orderId) {
+    public String deliveryOrder(String orderId) throws IOException {
+
+        Gson gson = new Gson();
         ConnMongoDB connMongoDB = new ConnMongoDB();
-
         MongoCollection collection = connMongoDB.getCollection("bbddb", "normalorder");
-        MongoCursor<Document> cursor = collection.find().iterator();
+        Document d = new Document();
+        d.append("orderId", orderId);
+        MongoCursor<Document> cursor = collection.find(d).iterator();
         Document document = cursor.next();
-        Document update = new Document();
-        Document newValue = new Document();
-        DateTime dateTime = new DateTime();
-        newValue.append("orderStatus", "2")
-                .append("deliveryTime", dateTime.toString("yyyy-MM-dd HH:mm:ss"));
-        update.append("$set", newValue);
-        collection.updateOne(document, update);
-        return "1";
+        String mobile = document.getString("receiverTel");
+        String goodsName=document.getString("goodsName");
+        //发送验证码
+        GenerateVerificationCode generateVerificationCode = new GenerateVerificationCode();
+        String replyCode = generateVerificationCode.generateCode();
+        String text ="【帮帮带】物品["+goodsName+"]已送达，请回复验证码"+replyCode+"完成此订单。";
+        SMSApi smsApi = new SMSApi();
+        String replymsg = smsApi.sendSms(text, mobile);
+        VrfCodeResponsePojo responsePojo = gson.fromJson(replymsg, VrfCodeResponsePojo.class);
+        ReturnInfoPojo returnInfoPojo=new ReturnInfoPojo();
+        if (responsePojo.getCode().equals(0)) {
+            Document update = new Document();
+            Document newValue = new Document();
+            DateTime dateTime = new DateTime();
+            newValue.append("orderStatus", "2")
+                    .append("deliveryTime", dateTime.toString("yyyy-MM-dd HH:mm:ss"))
+                    .append("orderReplyCode", replyCode);
+            update.append("$set", newValue);
+            collection.updateOne(document, update);
+            cursor.close();
+            returnInfoPojo.setStatus("1");
+            returnInfoPojo.setMessage("发送成功");
+        }else {
+            returnInfoPojo.setStatus("0");
+            returnInfoPojo.setMessage("发送失败");
+        }
+        connMongoDB.getMongoClient().close();
+        return gson.toJson(returnInfoPojo,ReturnInfoPojo.class);
     }
-
-
 }

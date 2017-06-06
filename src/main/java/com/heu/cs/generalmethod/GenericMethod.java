@@ -11,7 +11,7 @@ import java.text.DecimalFormat;
 /**
  * Created by memgq on 2017/6/5.
  */
-public class GenericInterfaceImpl implements GenericInterface {
+public class GenericMethod implements GenericMethodInterface {
     public final DateTimeFormatter formatDateTime = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
     @Override
     public String getTimeDif(String targetTime){
