@@ -26,8 +26,8 @@ public class JettyServerStart {
 //                org.glassfish.jersey.servlet.ServletContainer.class, "/webapi/*");
 //        jerseyServlet.setInitOrder(1);
 //
-//        // Tells the Jersey Servlet which REST service/class to load.
-//        jerseyServlet.setInitParameter("jersey.config.server.provider.packages", "com.heu.cs.service");
+//        // Tells the Jersey Servlet which REST api/class to load.
+//        jerseyServlet.setInitParameter("jersey.config.server.provider.packages", "com.heu.cs.api");
 //        jerseyServlet.setInitParameter("jersey.config.server.provider.classnames",
 //                "UploadFileService;org.glassfish.jersey.media.multipart.MultiPartFeature");
 //
@@ -54,8 +54,8 @@ public class JettyServerStart {
         ServletHolder jerseyServlet = context.addServlet(
                 org.glassfish.jersey.servlet.ServletContainer.class, "/webapi/*");
         jerseyServlet.setInitOrder(1);
-        // Tells the Jersey Servlet which REST service/class to load.
-        jerseyServlet.setInitParameter("jersey.config.server.provider.packages", "com.heu.cs.service");
+        // Tells the Jersey Servlet which REST api/class to load.
+        jerseyServlet.setInitParameter("jersey.config.server.provider.packages", "com.heu.cs.api");
         jerseyServlet.setInitParameter("jersey.config.server.provider.classnames",
                 "UploadFileService;org.glassfish.jersey.media.multipart.MultiPartFeature");
         ServletHolder staticServlet = context.addServlet(DefaultServlet.class, "/*");
