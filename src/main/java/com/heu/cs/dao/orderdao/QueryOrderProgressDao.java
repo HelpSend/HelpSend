@@ -31,6 +31,11 @@ public class QueryOrderProgressDao {
             if (orderStatus.equals("0")) {
                 String s0=orderPojo.getPutOrderTime() + "\n已下单,订单编号:" + orderPojo.getOrderId();
                 progressList.add(s0);
+            } else if(orderStatus.equals("-1")){
+                String s0=orderPojo.getPutOrderTime() + "\n已下单,订单编号:" + orderPojo.getOrderId();
+                String s1=orderPojo.getPutOrderTime() + "\n已取消订单,订单编号:" + orderPojo.getOrderId();
+                progressList.add(s0);
+                progressList.add(s1);
             } else {
                 Document usr = new Document();
                 usr.append("userId", orderPojo.getOrderReceiverId());

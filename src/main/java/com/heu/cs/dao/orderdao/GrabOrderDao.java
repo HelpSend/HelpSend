@@ -2,7 +2,8 @@ package com.heu.cs.dao.orderdao;
 
 import com.google.gson.Gson;
 import com.heu.cs.conndb.ConnMongoDB;
-import com.heu.cs.generalmethod.GenericMethod;
+import com.heu.cs.generalmethod.GenericDao;
+import com.heu.cs.generalmethod.GenericDaoImpl;
 import com.heu.cs.pojo.*;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -31,7 +32,7 @@ public class GrabOrderDao {
         ReturnInfoPojo returnInfo=new ReturnInfoPojo();
         List<OrderPojo> orderPojoList= getOrderList();
         if(orderPojoList.size()>0) {
-            GenericMethod genericDao=new GenericMethod();
+            GenericDao genericDao =new GenericDaoImpl();
             for (OrderPojo order : orderPojoList) {
                 String distance = genericDao.getDistance(latitude, longitude, order.getStartLocation().getLatitude(), order.getStartLocation().getLongitude());
                 if (Double.parseDouble(distance) < NEARBY) {
@@ -113,12 +114,12 @@ public class GrabOrderDao {
      * @return
      * @throws ParseException
      */
-    public String formatReceiveTime(String orderReceiveTime,DateTime nowDateTime,GenericMethod genericDao) throws ParseException {
+    public String formatReceiveTime(String orderReceiveTime,DateTime nowDateTime,GenericDao genericDao) throws ParseException {
         String returnTime="";
         String[] tlist=orderReceiveTime.split(" ");
         Long receiveTimeStamp= genericDao.getTimestamp(orderReceiveTime);
         String todayStr= nowDateTime.toString(formatDateStr);
-        long todayTimeStamp=genericDao.getTimestamp(todayStr+timezero);
+        long todayTimeStamp= genericDao.getTimestamp(todayStr+timezero);
         if(receiveTimeStamp<=todayTimeStamp&&receiveTimeStamp>nowDateTime.getMillis()){
             returnTime="今天 "+tlist[1];
         }else if (receiveTimeStamp<=todayTimeStamp+24*60*60&&receiveTimeStamp>todayTimeStamp){
@@ -141,9 +142,9 @@ public class GrabOrderDao {
      * @return
      * @throws ParseException
      */
-    private String formatSendTime(String orderSendTime,Long nowTimestamp,GenericMethod genericDao) {
+    private String formatSendTime(String orderSendTime,Long nowTimestamp,GenericDao genericDao) {
         String sendTime="";
-        Long sendTimestamp=genericDao.getTimestamp(orderSendTime);
+        Long sendTimestamp= genericDao.getTimestamp(orderSendTime);
         long r= sendTimestamp-nowTimestamp;
         if(r<=20*60){
             sendTime="立即";
@@ -191,15 +192,15 @@ public class GrabOrderDao {
             Document sortDocument=new Document();
             sortDocument.append("sendTime",1);
             findIterable = collection.find(document).sort(sortDocument).limit(20);
-            GenericMethod genericDao=new GenericMethod();
+            GenericDao genericDao =new GenericDaoImpl();
             for(Document d:findIterable){
                 OrderPojo order = gson.fromJson(d.toJson(), OrderPojo.class);
                 genericDao.updateOrderId(d,collection);
-                long receiveTimeStamp=genericDao.getTimestamp(order.getReceiveTime());
+                long receiveTimeStamp= genericDao.getTimestamp(order.getReceiveTime());
                 if(receiveTimeStamp>nowTimestamp){
                     order.setOrderId(d.get("_id").toString());
-                    order.setSendTime(formatSendTime(order.getSendTime(),nowTimestamp,genericDao));
-                    order.setReceiveTime(formatReceiveTime(order.getReceiveTime(),nowDateTime,genericDao)+" 之前");
+                    order.setSendTime(formatSendTime(order.getSendTime(),nowTimestamp, genericDao));
+                    order.setReceiveTime(formatReceiveTime(order.getReceiveTime(),nowDateTime, genericDao)+" 之前");
                     orderPojoList.add(order);
                 }else{
                     CancelOrderDao cancelOrderDao=new CancelOrderDao();

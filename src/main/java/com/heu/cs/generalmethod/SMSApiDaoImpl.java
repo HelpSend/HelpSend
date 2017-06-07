@@ -19,7 +19,7 @@ import org.apache.http.util.EntityUtils;
 /**
  * Created by memgq on 2017/6/3.
  */
-public class SMSApi implements SMSApiInterface {
+public class SMSApiDaoImpl implements SMSApiDao {
     //查账户信息的http地址
     private  final String URI_GET_USER_INFO = "https://sms.yunpian.com/v2/user/get.json";
 

@@ -3,9 +3,8 @@ package com.heu.cs.dao.orderdao;
 import com.google.gson.Gson;
 import com.heu.cs.conndb.ConnMongoDB;
 import com.heu.cs.generalmethod.GenerateVerificationCode;
-import com.heu.cs.generalmethod.GenerateVerificationCodeInterface;
-import com.heu.cs.generalmethod.GenericMethod;
-import com.heu.cs.generalmethod.SMSApi;
+import com.heu.cs.generalmethod.GenerateVerificationCodeImpl;
+import com.heu.cs.generalmethod.SMSApiDaoImpl;
 import com.heu.cs.pojo.ReturnInfoPojo;
 import com.heu.cs.pojo.VrfCodeResponsePojo;
 import com.mongodb.client.MongoCollection;
@@ -31,11 +30,11 @@ public class DeliveryOrderDao {
         String mobile = document.getString("receiverTel");
         String goodsName=document.getString("goodsName");
         //发送验证码
-        GenerateVerificationCode generateVerificationCode = new GenerateVerificationCode();
+        GenerateVerificationCode generateVerificationCode = new GenerateVerificationCodeImpl();
         String replyCode = generateVerificationCode.generateCode(6);
         String text ="【帮帮带】物品["+goodsName+"]已送达，请回复验证码"+replyCode+"完成此订单。";
-        SMSApi smsApi = new SMSApi();
-        String replymsg = smsApi.sendSms(text, mobile);
+        SMSApiDaoImpl smsApiDaoImpl = new SMSApiDaoImpl();
+        String replymsg = smsApiDaoImpl.sendSms(text, mobile);
         VrfCodeResponsePojo responsePojo = gson.fromJson(replymsg, VrfCodeResponsePojo.class);
         ReturnInfoPojo returnInfoPojo=new ReturnInfoPojo();
         if (responsePojo.getCode().equals(0)) {

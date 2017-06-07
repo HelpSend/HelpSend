@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * Created by memgq on 2017/6/6.
  */
-public interface SMSApiInterface {
+public interface SMSApiDao {
 
     String getUserInfo() throws IOException, URISyntaxException;
 

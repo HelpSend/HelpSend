@@ -3,8 +3,9 @@ package com.heu.cs.dao.userdao;
 import com.google.gson.Gson;
 import com.heu.cs.conndb.ConnMongoDB;
 import com.heu.cs.generalmethod.GenerateVerificationCode;
-import com.heu.cs.generalmethod.SMSApi;
-import com.heu.cs.generalmethod.SMSApiInterface;
+import com.heu.cs.generalmethod.GenerateVerificationCodeImpl;
+import com.heu.cs.generalmethod.SMSApiDaoImpl;
+import com.heu.cs.generalmethod.SMSApiDao;
 import com.heu.cs.pojo.VrfCodeResponsePojo;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -26,11 +27,11 @@ public class SendQuickLoginCodeDao {
     public String sendQuickLoginCode(String telNumber) throws IOException {
         preCreateUser(telNumber);
         String resultStr="";
-        GenerateVerificationCode generateVerificationCode=new GenerateVerificationCode();
-        String verificationCode=generateVerificationCode.generateCode(4);
+        GenerateVerificationCode generateVerificationCode =new GenerateVerificationCodeImpl();
+        String verificationCode= generateVerificationCode.generateCode(4);
         String textTemplate=TEXT+verificationCode;
-        SMSApiInterface smsApiInterface =new SMSApi();
-        String returnMsg= smsApiInterface.sendSms(textTemplate,telNumber);
+        SMSApiDao smsApiDao =new SMSApiDaoImpl();
+        String returnMsg= smsApiDao.sendSms(textTemplate,telNumber);
         Gson gson=new Gson();
         VrfCodeResponsePojo vrfCodeResponsePojo=gson.fromJson(returnMsg,VrfCodeResponsePojo.class);
         if(vrfCodeResponsePojo.getCode().equals(0)){
