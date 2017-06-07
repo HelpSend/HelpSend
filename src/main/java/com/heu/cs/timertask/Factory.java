@@ -1,7 +1,7 @@
 package com.heu.cs.timertask;
 
-import com.heu.cs.cache.Group;
-import com.heu.cs.cache.GroupCacheFactory;
+import com.heu.cs.service.cache.Group;
+import com.heu.cs.service.cache.GroupCacheFactory;
 
 /**
  * Created by memgq on 2017/6/1.

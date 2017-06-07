@@ -1,4 +1,4 @@
-package com.heu.cs.generalmethod;
+package com.heu.cs.utils;
 
 import java.util.Random;
 

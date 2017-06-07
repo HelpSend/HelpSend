@@ -1,4 +1,4 @@
-package com.heu.cs.generalmethod;
+package com.heu.cs.utils;
 
 /**
  * Created by memgq on 2017/6/6.

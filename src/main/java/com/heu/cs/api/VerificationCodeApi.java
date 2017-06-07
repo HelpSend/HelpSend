@@ -1,21 +1,18 @@
-package com.heu.cs.service;
+package com.heu.cs.api;
 
 import com.heu.cs.dao.orderdao.GetUserReplySMSDao;
 
-import javax.json.JsonObject;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import java.io.*;
 import java.net.URLDecoder;
-import java.util.Enumeration;
 
 /**
  * Created by memgq on 2017/6/3.
  */
 @Path("/vrfcode")
-public class VerificationCodeService {
+public class VerificationCodeApi {
 
 
     @Context

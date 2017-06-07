@@ -2,10 +2,10 @@ package com.heu.cs.dao.userdao;
 
 import com.google.gson.Gson;
 import com.heu.cs.conndb.ConnMongoDB;
-import com.heu.cs.generalmethod.GenerateVerificationCode;
-import com.heu.cs.generalmethod.GenerateVerificationCodeImpl;
-import com.heu.cs.generalmethod.SMSApiDaoImpl;
-import com.heu.cs.generalmethod.SMSApiDao;
+import com.heu.cs.utils.GenerateVerificationCode;
+import com.heu.cs.utils.GenerateVerificationCodeImpl;
+import com.heu.cs.utils.SMSApiDaoImpl;
+import com.heu.cs.utils.SMSApiDao;
 import com.heu.cs.pojo.VrfCodeResponsePojo;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;

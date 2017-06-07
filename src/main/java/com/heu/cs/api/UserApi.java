@@ -1,4 +1,4 @@
-package com.heu.cs.service;
+package com.heu.cs.api;
 
 import com.heu.cs.dao.userdao.QuickLoginDao;
 import com.heu.cs.dao.userdao.SendQuickLoginCodeDao;
@@ -16,7 +16,7 @@ import java.io.IOException;
  * Created by memgq on 2017/6/3.
  */
 @Path("/user")
-public class UserService {
+public class UserApi {
 
 
 

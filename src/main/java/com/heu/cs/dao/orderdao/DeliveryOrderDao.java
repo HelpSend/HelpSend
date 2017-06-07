@@ -2,9 +2,9 @@ package com.heu.cs.dao.orderdao;
 
 import com.google.gson.Gson;
 import com.heu.cs.conndb.ConnMongoDB;
-import com.heu.cs.generalmethod.GenerateVerificationCode;
-import com.heu.cs.generalmethod.GenerateVerificationCodeImpl;
-import com.heu.cs.generalmethod.SMSApiDaoImpl;
+import com.heu.cs.utils.GenerateVerificationCode;
+import com.heu.cs.utils.GenerateVerificationCodeImpl;
+import com.heu.cs.utils.SMSApiDaoImpl;
 import com.heu.cs.pojo.ReturnInfoPojo;
 import com.heu.cs.pojo.VrfCodeResponsePojo;
 import com.mongodb.client.MongoCollection;

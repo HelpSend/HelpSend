@@ -10,7 +10,9 @@ import org.bson.Document;
  * Created by memgq on 2017/5/14.
  */
 public class ConnMongoDB {
-    MongoClient mongoClient = new MongoClient("localhost",27017);
+    private MongoClient mongoClient = new MongoClient("localhost",27017);
+
+
 
     public ConnMongoDB( ){ }
 
@@ -27,6 +29,13 @@ public class ConnMongoDB {
     }
 
     public MongoCollection getCollection(String databaseName, String collectionName){
+        MongoDatabase mongoDatabase = mongoClient.getDatabase(databaseName);
+        MongoCollection<Document> collection = mongoDatabase.getCollection(collectionName);
+        return collection;
+    }
+
+
+    public MongoCollection getOrderCollection(String databaseName, String collectionName){
         MongoDatabase mongoDatabase = mongoClient.getDatabase(databaseName);
         MongoCollection<Document> collection = mongoDatabase.getCollection(collectionName);
         return collection;

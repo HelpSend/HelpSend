@@ -2,8 +2,8 @@ package com.heu.cs.dao.orderdao;
 
 import com.google.gson.Gson;
 import com.heu.cs.conndb.ConnMongoDB;
-import com.heu.cs.generalmethod.GenericDao;
-import com.heu.cs.generalmethod.GenericDaoImpl;
+import com.heu.cs.utils.GenericDao;
+import com.heu.cs.utils.GenericDaoImpl;
 import com.heu.cs.pojo.MyPutOrderPojo;
 import com.heu.cs.pojo.OrderPojo;
 import com.mongodb.client.MongoCollection;

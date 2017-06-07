@@ -1,4 +1,4 @@
-package com.heu.cs.service;
+package com.heu.cs.api;
 
 
 import com.google.gson.Gson;
@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  * Created by memgq on 2017/5/14.
  */
 @Path("/order")
-public class OrderService {
+public class OrderApi {
 
 
 
@@ -105,7 +105,7 @@ public class OrderService {
                     returnInfo.setStatus(status);
                     returnInfo.setMessage("下单成功");
                 } catch (IOException ex) {
-                    Logger.getLogger(UploadFileService.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(UploadFileApi.class.getName()).log(Level.SEVERE, null, ex);
                     returnInfo.setStatus("0");
                     returnInfo.setMessage("文件上传出错");
                 }finally {

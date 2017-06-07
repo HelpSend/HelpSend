@@ -1,4 +1,4 @@
-package com.heu.cs.service;
+package com.heu.cs.api;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +20,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 @Path("/uploadfile")
 @Consumes(MediaType.MULTIPART_FORM_DATA)
 @Produces(MediaType.TEXT_PLAIN)
-public class UploadFileService {
+public class UploadFileApi {
 
     /**
      * Constants operating with images
@@ -54,7 +54,7 @@ public class UploadFileService {
             //原来自己的文件写入操作
             //saveFile(fileInputStream, file);
         } catch (IOException ex) {
-            Logger.getLogger(UploadFileService.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UploadFileApi.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return "images/" + imageName;
