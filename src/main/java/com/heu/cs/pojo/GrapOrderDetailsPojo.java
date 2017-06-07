@@ -8,8 +8,8 @@ public class GrapOrderDetailsPojo {
     private String orderOwnerAvatarPath;
     private String orderOwnerGender;
     private String orderId;
-    private StartLocationPojo startLocationPojo;
-    private EndLocationPojo endLocationPojo;
+    private LocationPojo startLocationPojo;
+    private LocationPojo endLocationPojo;
     private String goodsWeight;
     private String goodsCategory;
     private String sendTime;
@@ -30,19 +30,19 @@ public class GrapOrderDetailsPojo {
 
 
 
-    public StartLocationPojo getStartLocationPojo() {
+    public LocationPojo getStartLocationPojo() {
         return startLocationPojo;
     }
 
-    public void setStartLocationPojo(StartLocationPojo startLocationPojo) {
+    public void setStartLocationPojo(LocationPojo startLocationPojo) {
         this.startLocationPojo = startLocationPojo;
     }
 
-    public EndLocationPojo getEndLocationPojo() {
+    public LocationPojo getEndLocationPojo() {
         return endLocationPojo;
     }
 
-    public void setEndLocationPojo(EndLocationPojo endLocationPojo) {
+    public void setEndLocationPojo(LocationPojo endLocationPojo) {
         this.endLocationPojo = endLocationPojo;
     }
 

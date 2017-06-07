@@ -3,7 +3,7 @@ package com.heu.cs.pojo;
 /**
  * Created by memgq on 2017/5/22.
  */
-public class EndLocationPojo {
+public class LocationPojo {
     private String latitude="";
     private String longitude="";
 

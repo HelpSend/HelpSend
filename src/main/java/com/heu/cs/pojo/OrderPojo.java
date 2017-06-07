@@ -9,8 +9,8 @@ import java.util.List;
  */
 public class OrderPojo {
 private String orderId="";
-    private EndLocationPojo endLocation;
-    private StartLocationPojo startLocation;
+    private LocationPojo endLocation;
+    private LocationPojo startLocation;
     private String sender;
     private String receiver;
     private String senderTel;
@@ -70,19 +70,19 @@ private String orderId="";
         this.orderId = orderId;
     }
 
-    public EndLocationPojo getEndLocation() {
+    public LocationPojo getEndLocation() {
         return endLocation;
     }
 
-    public void setEndLocation(EndLocationPojo endLocation) {
+    public void setEndLocation(LocationPojo endLocation) {
         this.endLocation = endLocation;
     }
 
-    public StartLocationPojo getStartLocation() {
+    public LocationPojo getStartLocation() {
         return startLocation;
     }
 
-    public void setStartLocation(StartLocationPojo startLocation) {
+    public void setStartLocation(LocationPojo startLocation) {
         this.startLocation = startLocation;
     }
 

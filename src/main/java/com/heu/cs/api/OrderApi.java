@@ -2,8 +2,12 @@ package com.heu.cs.api;
 
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
 import com.heu.cs.dao.orderdao.*;
 import com.heu.cs.pojo.ReturnInfoPojo;
+import com.heu.cs.utils.GenericDao;
+import com.heu.cs.utils.GenericDaoImpl;
 import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -18,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.util.Calendar;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -250,4 +255,19 @@ public class OrderApi {
         String result=deliveryOrderDao.deliveryOrder(orderId);
         return result;
     }
+
+
+    @GET
+    @Path("/getprice")
+    @Produces("text/plain;charset=utf-8")
+    public String getPriceURL(@QueryParam("location") String location) throws IOException {
+        String startLatitude="";
+        String startLongitude="";
+        String endtLatitude="";
+        String endLongitude="";
+        GenericDao genericDao=new GenericDaoImpl();
+        String result=genericDao.getPrice(startLatitude,startLongitude,endtLatitude,endLongitude);
+        return result;
+    }
+
 }
