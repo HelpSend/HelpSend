@@ -44,6 +44,8 @@ public class GrabOrderDetailsDao {
                 grapOrderDetailsPojo.setStartLocationPojo(order.getStartLocation());
                 grapOrderDetailsPojo.setSendTime(order.getSendTime());
                 grapOrderDetailsPojo.setReceiveTime(order.getReceiveTime());
+                grapOrderDetailsPojo.setSenderTel(order.getSenderTel());
+                grapOrderDetailsPojo.setReceiverTel(order.getReceiverTel());
                 MongoCollection userCollection = connMongoDB.getCollection("bbddb", "user");
                 Document userDocument = new Document();
                 userDocument.append("_id", new ObjectId(order.getOrderOwnerId()));

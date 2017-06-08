@@ -11,7 +11,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="HelpSend" target="1.6" />
+      <module name="HelpSend" target="1.7" />
       <module name="HelpSendTeam" target="1.5" />
     </bytecodeTargetLevel>
   </component>

@@ -50,7 +50,7 @@ public class DeliveryOrderDao {
             returnInfoPojo.setMessage("发送成功");
         }else {
             returnInfoPojo.setStatus("0");
-            returnInfoPojo.setMessage("发送失败");
+            returnInfoPojo.setMessage("发送失败,请稍后重试");
         }
         connMongoDB.getMongoClient().close();
         return gson.toJson(returnInfoPojo,ReturnInfoPojo.class);

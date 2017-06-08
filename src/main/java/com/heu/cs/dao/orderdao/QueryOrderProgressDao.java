@@ -33,9 +33,9 @@ public class QueryOrderProgressDao {
                 progressList.add(s0);
             } else if(orderStatus.equals("-1")){
                 String s0=orderPojo.getPutOrderTime() + "\n已下单,订单编号:" + orderPojo.getOrderId();
-                String s1=orderPojo.getPutOrderTime() + "\n已取消订单,订单编号:" + orderPojo.getOrderId();
-                progressList.add(s0);
+                String s1=orderPojo.getPutOrderTime() + "\n您已成功取消订单。";
                 progressList.add(s1);
+                progressList.add(s0);
             } else {
                 Document usr = new Document();
                 usr.append("userId", orderPojo.getOrderReceiverId());
@@ -45,15 +45,15 @@ public class QueryOrderProgressDao {
                 if (orderStatus.equals("1")) {
                     String  s0=orderPojo.getPutOrderTime() + "\n已下单,订单编号:" + orderPojo.getOrderId();
                     String s1=orderPojo.getReceiveOrderTime() + "\n帮带员【" + u.get("nickName") + "】已经接单";
-                    progressList.add(s0);
                     progressList.add(s1);
+                    progressList.add(s0);
                 } else if (orderStatus.equals("2")) {
                     String s0=orderPojo.getPutOrderTime() + "\n已下单,订单编号:" + orderPojo.getOrderId();
                     String s1=orderPojo.getReceiveOrderTime() + "\n帮带员【" + u.get("nickName") + "】已经接单";
                     String s2=orderPojo.getDeliveryTime() + "\n帮带员【" + u.get("nickName") + "】已完成订单";
-                    progressList.add(s0);
-                    progressList.add(s1);
                     progressList.add(s2);
+                    progressList.add(s1);
+                    progressList.add(s0);
                 }else {
 
                 }

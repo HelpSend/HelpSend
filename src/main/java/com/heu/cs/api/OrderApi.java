@@ -5,9 +5,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.heu.cs.dao.orderdao.*;
+import com.heu.cs.pojo.LocationPojo;
 import com.heu.cs.pojo.ReturnInfoPojo;
+import com.heu.cs.service.image.ImageClient;
 import com.heu.cs.utils.GenericDao;
 import com.heu.cs.utils.GenericDaoImpl;
+import com.heu.cs.utils.TencentYouTu;
+import com.heu.cs.utils.TencentYouTuImpl;
 import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -33,6 +37,15 @@ import java.util.logging.Logger;
 @Path("/order")
 public class OrderApi {
 
+    private static final int appId = 1252947691;//      YOUR_APPID
+    private static final String secretId = "AKIDgGajkbKhx64pQpF5xc5MQIyCIG6nRgst";
+    private static final String secretKey = "0qdHl9YpvrcCbeZJsLdjdLtFQPDpFW4S";
+    private static final String HOST="http://mengqipoet.cn:8080/upload_images/";
+    // ImageClient
+
+
+    // 设置要操作的bucket
+    private static final String bucketName = "helpsendv1";
 
 
     @Context
@@ -42,15 +55,14 @@ public class OrderApi {
     HttpServletRequest request;
 
 
-
     /**
      * Constants operating with images
      */
-    private  final String ROOTPATH = System.getProperty("user.dir");
-    private  final String ROOT_IMAGES_PATH = "/src/main/resources";
-    private  final String JPG_CONTENT_TYPE = "image/jpeg";
-    private  final String PNG_CONTENT_TYPE = "image/png";
-    private  final String IMAGE_URL = "/upload_images/";
+    private static final String ROOTPATH = System.getProperty("user.dir");
+    private static final String ROOT_IMAGES_PATH = "/src/main/resources";
+    private static final String JPG_CONTENT_TYPE = "image/jpeg";
+    private static final String PNG_CONTENT_TYPE = "image/png";
+    private static final String IMAGE_URL = "/upload_images/";
 
 
     @GET
@@ -95,42 +107,59 @@ public class OrderApi {
                                  @FormDataParam("photos") FormDataContentDisposition disposition,
                                  @FormDataParam("orderinfo") String orderInfoStr) {
         ReturnInfoPojo returnInfo = new ReturnInfoPojo();
-        String status="";
+        String status = "";
         CreateOrderDao createOrderDao = new CreateOrderDao();
         String imageName = disposition.getFileName();
         Gson gson = new Gson();
         if (!imageName.equals("")) {
             imageName = Calendar.getInstance().getTimeInMillis() + imageName;
-            status = createOrderDao.insertOrder(orderInfoStr, IMAGE_URL + imageName);
-            if (status.equals("1")){
-                File file = new File(ROOTPATH + ROOT_IMAGES_PATH + IMAGE_URL + imageName);
-                try {
-                    //使用common io的文件写入操作
-                    FileUtils.copyInputStreamToFile(fileInputStream, file);
-                    returnInfo.setStatus(status);
-                    returnInfo.setMessage("下单成功");
-                } catch (IOException ex) {
-                    Logger.getLogger(UploadFileApi.class.getName()).log(Level.SEVERE, null, ex);
+            String imgUrl = ROOTPATH + ROOT_IMAGES_PATH + IMAGE_URL + imageName;
+            String imgHostUrl=HOST+imageName;
+            File file = new File(imgUrl);
+            try {
+                //使用common io的文件写入操作
+                FileUtils.copyInputStreamToFile(fileInputStream, file);
+                TencentYouTu tencentYouTu = new TencentYouTuImpl();
+                ImageClient imageClient = new ImageClient(appId, secretId, secretKey);
+                String pornRes = tencentYouTu.detectPorn(imgHostUrl, imageClient, bucketName);
+                System.out.println("检测结果："+pornRes);
+                imageClient.shutdown();
+                if (pornRes.equals("0")) {
+                    status = createOrderDao.insertOrder(orderInfoStr, IMAGE_URL + imageName);
+                    String s="";
+                    String m="";
+                    if (status.equals("1")) {
+                        s="1";
+                        m="下单成功";
+                    } else {
+                        s="0";
+                        m="下单失败";
+                    }
+                    returnInfo.setStatus(s);
+                    returnInfo.setMessage(m);
+                } else {
                     returnInfo.setStatus("0");
-                    returnInfo.setMessage("文件上传出错");
-                }finally {
-                    return gson.toJson(returnInfo,ReturnInfoPojo.class);
+                    returnInfo.setMessage("图片不合格");
                 }
-            }else {
-                returnInfo.setStatus(status);
-                returnInfo.setMessage("下单失败");
-                return gson.toJson(returnInfo,ReturnInfoPojo.class);
+                return gson.toJson(returnInfo, ReturnInfoPojo.class);
+
+            } catch (IOException ex) {
+                Logger.getLogger(UploadFileApi.class.getName()).log(Level.SEVERE, null, ex);
+                returnInfo.setStatus("0");
+                returnInfo.setMessage("文件上传出错");
+                return gson.toJson(returnInfo, ReturnInfoPojo.class);
             }
+
         } else {
             status = createOrderDao.insertOrder(orderInfoStr, IMAGE_URL);
-            if (status.equals("1")){
+            if (status.equals("1")) {
                 returnInfo.setStatus(status);
                 returnInfo.setMessage("下单成功");
-            }else {
+            } else {
                 returnInfo.setStatus("0");
                 returnInfo.setMessage("下单失败");
             }
-            return gson.toJson(returnInfo,ReturnInfoPojo.class);
+            return gson.toJson(returnInfo, ReturnInfoPojo.class);
         }
     }
 
@@ -199,6 +228,7 @@ public class OrderApi {
 
     /**
      * 根据订单Id查询订单详情
+     *
      * @param orderId
      * @return
      */
@@ -217,11 +247,10 @@ public class OrderApi {
     @Produces("text/plain;charset=utf-8")
     public String queryMyPlaceOrderURL(@QueryParam("orderOwnerId") String orderOwnerId,
                                        @QueryParam("orderStatus") String orderStatus) {
-        QueryMyPutOrderDao queryMyPutOrderDao=new QueryMyPutOrderDao();
-        String  result=queryMyPutOrderDao.queryMyPutOrder(orderOwnerId,orderStatus);
+        QueryMyPutOrderDao queryMyPutOrderDao = new QueryMyPutOrderDao();
+        String result = queryMyPutOrderDao.queryMyPutOrder(orderOwnerId, orderStatus);
         return result;
     }
-
 
 
     @GET
@@ -229,30 +258,28 @@ public class OrderApi {
     @Produces("text/plain;charset=utf-8")
     public String queryMyReceiveOrderURL(@QueryParam("orderReceiverId") String orderReceiverId,
                                          @QueryParam("orderStatus") String orderStatus) {
-        QueryMyReceiveOrderDao queryMyReceiveOrderDao=new QueryMyReceiveOrderDao();
-        String  result=queryMyReceiveOrderDao.queryMyReceiveOrder(orderReceiverId,orderStatus);
+        QueryMyReceiveOrderDao queryMyReceiveOrderDao = new QueryMyReceiveOrderDao();
+        String result = queryMyReceiveOrderDao.queryMyReceiveOrder(orderReceiverId, orderStatus);
         return result;
     }
-
 
 
     @GET
     @Path("/queryorderprogress")
     @Produces("text/plain;charset=utf-8")
     public String queryOrderProgressURL(@QueryParam("orderId") String orderId) {
-        QueryOrderProgressDao queryOrderProgressDao=new QueryOrderProgressDao();
-        String result=queryOrderProgressDao.queryOrderProgress(orderId);
+        QueryOrderProgressDao queryOrderProgressDao = new QueryOrderProgressDao();
+        String result = queryOrderProgressDao.queryOrderProgress(orderId);
         return result;
     }
-
 
 
     @GET
     @Path("/deliveryorder")
     @Produces("text/plain;charset=utf-8")
     public String deliveryOrderURL(@QueryParam("orderId") String orderId) throws IOException {
-        DeliveryOrderDao deliveryOrderDao=new DeliveryOrderDao();
-        String result=deliveryOrderDao.deliveryOrder(orderId);
+        DeliveryOrderDao deliveryOrderDao = new DeliveryOrderDao();
+        String result = deliveryOrderDao.deliveryOrder(orderId);
         return result;
     }
 
@@ -261,13 +288,8 @@ public class OrderApi {
     @Path("/getprice")
     @Produces("text/plain;charset=utf-8")
     public String getPriceURL(@QueryParam("location") String location) throws IOException {
-        String startLatitude="";
-        String startLongitude="";
-        String endtLatitude="";
-        String endLongitude="";
-        GenericDao genericDao=new GenericDaoImpl();
-        String result=genericDao.getPrice(startLatitude,startLongitude,endtLatitude,endLongitude);
-        return result;
+        GetPriceDao getPriceDao = new GetPriceDao();
+        return getPriceDao.getPrice(location);
     }
 
 }

@@ -17,8 +17,24 @@ public class GrapOrderDetailsPojo {
     private String orderOwnerId;
     private String imagePath;
     private String orderOwnerNickName;
+    private String senderTel;
+    private String receiverTel;
 
+    public String getSenderTel() {
+        return senderTel;
+    }
 
+    public void setSenderTel(String senderTel) {
+        this.senderTel = senderTel;
+    }
+
+    public String getReceiverTel() {
+        return receiverTel;
+    }
+
+    public void setReceiverTel(String receiverTel) {
+        this.receiverTel = receiverTel;
+    }
 
     public String getOrderOwnerNickName() {
         return orderOwnerNickName;

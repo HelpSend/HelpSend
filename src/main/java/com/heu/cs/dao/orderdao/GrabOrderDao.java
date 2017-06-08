@@ -45,10 +45,9 @@ public class GrabOrderDao {
                     grabOrderPojo.setGoodsWeight(goodsProp[1]);
                     grabOrderPojo.setEndLocationPojo(order.getEndLocation());
                     grabOrderPojo.setStartLocationPojo(order.getStartLocation());
-                    grabOrderPojo.setOrderPrice(order.getOrderPrice());
                     grabOrderPojo.setOrderOwnerId(order.getOrderOwnerId());
                     grabOrderPojo.setDistance(distance + " 公里");
-                    grabOrderPojo.setOrderPrice(order.getOrderPrice());
+                    grabOrderPojo.setOrderPrice(order.getOrderPrice()+" 元");
                     grabOrderPojoList.add(grabOrderPojo);
                     GrabOrderResponsePojo grabOrderResponsePojo = new GrabOrderResponsePojo();
                     grabOrderResponsePojo.setStatus(operateSuccess);
