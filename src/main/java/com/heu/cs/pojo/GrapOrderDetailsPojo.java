@@ -19,6 +19,15 @@ public class GrapOrderDetailsPojo {
     private String orderOwnerNickName;
     private String senderTel;
     private String receiverTel;
+    private String commit;
+
+    public String getCommit() {
+        return commit;
+    }
+
+    public void setCommit(String commit) {
+        this.commit = commit;
+    }
 
     public String getSenderTel() {
         return senderTel;

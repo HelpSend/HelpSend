@@ -20,6 +20,7 @@ public class TencentYouTuImpl implements TencentYouTu {
         pornUrlList[0]=url;
         PornDetectRequest pornReq = new PornDetectRequest(bucketName, pornUrlList);
         String ret = imageClient.pornDetect(pornReq);
+        System.out.println(ret);
         Gson gson=new Gson();
         String status="";
         PornDetecResultListPojo resultPojoList=gson.fromJson(ret,PornDetecResultListPojo.class);

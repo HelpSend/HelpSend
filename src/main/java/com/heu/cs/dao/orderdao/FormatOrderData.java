@@ -22,6 +22,9 @@ public class FormatOrderData {
                 }else if(s.equals("endLocation")){
                     JsonObject object =addLocation("45.771437","126.686118");
                     obj.add(s, object);
+                }
+                else if (s.equals("commit")){
+                    obj.addProperty(s, "-1");
                 }else {
                     obj.addProperty(s, "");
                 }

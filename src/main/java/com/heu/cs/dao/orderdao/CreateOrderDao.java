@@ -3,8 +3,8 @@ package com.heu.cs.dao.orderdao;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.heu.cs.utils.GenericDao;
-import com.heu.cs.utils.GenericDaoImpl;
+import com.heu.cs.utils.GenericMethod;
+import com.heu.cs.utils.GenericMethodImpl;
 import com.heu.cs.pojo.OrderPojo;
 import com.mongodb.client.MongoCollection;
 import com.heu.cs.conndb.ConnMongoDB;
@@ -42,9 +42,12 @@ public class CreateOrderDao {
         OrderPojo order = gson.fromJson(obj, OrderPojo.class);
         order.setOrderStatus("0");
         order.setPutOrderTime(dateNowStr);
-        GenericDao genericDao=new GenericDaoImpl();
-        order.setOrderPrice(genericDao.getPrice(order.getStartLocation().getLatitude(),
+        GenericMethod genericMethod =new GenericMethodImpl();
+        order.setSenderTel(genericMethod.formatTelNumber(order.getSenderTel()));
+        order.setReceiverTel(genericMethod.formatTelNumber(order.getReceiverTel()));
+        order.setOrderPrice(genericMethod.getPrice(order.getStartLocation().getLatitude(),
                 order.getStartLocation().getLongitude(),order.getEndLocation().getLatitude(),order.getEndLocation().getLongitude()));
+
         if (imagePath.equals(IMAGE_URL)) {
             order.setImagePath("");
         } else {

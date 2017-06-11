@@ -8,6 +8,7 @@ import java.util.List;
  * Created by memgq on 2017/5/17.
  */
 public class UserPojo {
+
     private String userId;
     private String nickName;
     private String gender;
@@ -22,6 +23,33 @@ public class UserPojo {
     private String age;
     private String remark;
     private String status;
+    private String createDate;
+    private String experience="0";
+    private String score;
+
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
+    }
+
+    public String getExperience() {
+        return experience;
+    }
+
+    public void setExperience(String experience) {
+        this.experience = experience;
+    }
+
+    public String getScore() {
+        return score;
+    }
+
+    public void setScore(String score) {
+        this.score = score;
+    }
 
     public String getStatus() {
         return status;

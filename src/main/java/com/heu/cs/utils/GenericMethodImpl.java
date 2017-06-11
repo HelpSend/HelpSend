@@ -11,7 +11,7 @@ import java.text.DecimalFormat;
 /**
  * Created by memgq on 2017/6/5.
  */
-public class GenericDaoImpl implements GenericDao {
+public class GenericMethodImpl implements GenericMethod {
     public final DateTimeFormatter formatDateTime = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
     @Override
     public String getTimeDif(String targetTime){
@@ -45,6 +45,15 @@ public class GenericDaoImpl implements GenericDao {
         }
     }
 
+
+
+    @Override
+    public String formatTelNumber(String telNumber){
+        telNumber=telNumber.replace(" ","");
+        telNumber=telNumber.replace("-","");
+        telNumber=telNumber.substring(telNumber.length()-11,telNumber.length());
+        return telNumber;
+    }
 
 
 
@@ -130,7 +139,7 @@ public class GenericDaoImpl implements GenericDao {
         String date = getDayOrNight(time);//返回白天或夜间
 
         if(date.equals("白天")){
-            if(dis>0.0&&dis<1.0){
+            if(dis>=0.0&&dis<1.0){
                 totalPrice = basicPrice ;
             }else if(dis>=1.0&&dis<8.0){
                 totalPrice = basicPrice + (dis-1)*firstSinglePrice ;
@@ -138,9 +147,9 @@ public class GenericDaoImpl implements GenericDao {
                 totalPrice = basicPrice + 7.0*firstSinglePrice + (dis-8)*secondSinglePrice ;
             }
         }else{
-            if(dis>0.0&&dis<1.0){
+            if(dis>=0.0&&dis<1.0){
                 totalPrice = basicPrice + 1*nightPrice ;
-            }else if(dis>-1.0&&dis<8.0){
+            }else if(dis>=1.0&&dis<8.0){
                 totalPrice = basicPrice + (dis-1)*(firstSinglePrice+nightPrice);
             }else{
                 totalPrice = basicPrice + 7.0*(firstSinglePrice+nightPrice) + (dis-8)*(firstSinglePrice+nightPrice) ;

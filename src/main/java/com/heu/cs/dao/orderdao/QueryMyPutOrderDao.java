@@ -2,8 +2,8 @@ package com.heu.cs.dao.orderdao;
 
 import com.google.gson.Gson;
 import com.heu.cs.conndb.ConnMongoDB;
-import com.heu.cs.utils.GenericDao;
-import com.heu.cs.utils.GenericDaoImpl;
+import com.heu.cs.utils.GenericMethod;
+import com.heu.cs.utils.GenericMethodImpl;
 import com.heu.cs.pojo.MyPutOrderPojo;
 import com.heu.cs.pojo.OrderPojo;
 import com.mongodb.client.MongoCollection;
@@ -34,14 +34,15 @@ public class QueryMyPutOrderDao {
         MongoCursor<Document> mongoCursor= collection.find(filter).sort(sortDocument).limit(20).iterator();
         while (mongoCursor.hasNext()){
             Document d=mongoCursor.next();
-            GenericDao genericDao =new GenericDaoImpl();
-            genericDao.updateOrderId(d,collection);
+            GenericMethod genericMethod =new GenericMethodImpl();
+            genericMethod.updateOrderId(d,collection);
             OrderPojo orderPojo=gson.fromJson(d.toJson(),OrderPojo.class);
             MyPutOrderPojo myPOP=new MyPutOrderPojo();
             myPOP.setGoodsName(orderPojo.getGoodsName());
+            myPOP.setCommit(orderPojo.getCommit());
             myPOP.setOrderId(d.get("_id").toString());
             myPOP.setOrderStatus(orderPojo.getOrderStatus());
-            myPOP.setOrderTime(genericDao.getTimeDif(orderPojo.getPutOrderTime()));
+            myPOP.setOrderTime(genericMethod.getTimeDif(orderPojo.getPutOrderTime()));
             myPutOrderPojo.add(myPOP);
         }
 

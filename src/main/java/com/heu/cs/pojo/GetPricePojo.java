@@ -7,6 +7,10 @@ public class GetPricePojo {
     private LocationPojo start;
     private LocationPojo end;
 
+    public void setStart(LocationPojo start) {
+        this.start = start;
+    }
+
     public LocationPojo getStart() {
         return start;
     }

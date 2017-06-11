@@ -29,12 +29,15 @@ public class DeliveryOrderDao {
         Document document = cursor.next();
         String mobile = document.getString("receiverTel");
         String goodsName=document.getString("goodsName");
+        goodsName=goodsName.replace(" ","");
+        goodsName=goodsName.replace("-","");
         //发送验证码
         GenerateVerificationCode generateVerificationCode = new GenerateVerificationCodeImpl();
         String replyCode = generateVerificationCode.generateCode(6);
         String text ="【帮帮带】物品["+goodsName+"]已送达，请回复验证码"+replyCode+"完成此订单。";
         SMSApiDaoImpl smsApiDaoImpl = new SMSApiDaoImpl();
         String replymsg = smsApiDaoImpl.sendSms(text, mobile);
+        System.out.println(replymsg);
         VrfCodeResponsePojo responsePojo = gson.fromJson(replymsg, VrfCodeResponsePojo.class);
         ReturnInfoPojo returnInfoPojo=new ReturnInfoPojo();
         if (responsePojo.getCode().equals(0)) {
@@ -50,7 +53,7 @@ public class DeliveryOrderDao {
             returnInfoPojo.setMessage("发送成功");
         }else {
             returnInfoPojo.setStatus("0");
-            returnInfoPojo.setMessage("发送失败,请稍后重试");
+            returnInfoPojo.setMessage("发送失败,请稍后再发送");
         }
         connMongoDB.getMongoClient().close();
         return gson.toJson(returnInfoPojo,ReturnInfoPojo.class);

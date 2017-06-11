@@ -8,6 +8,15 @@ public class MyPutOrderPojo {
     private String goodsName;
     private String orderStatus;
     private String orderTime;
+    private String commit;
+
+    public String getCommit() {
+        return commit;
+    }
+
+    public void setCommit(String commit) {
+        this.commit = commit;
+    }
 
     public String getOrderTime() {
         return orderTime;

@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import com.heu.cs.pojo.GetPricePojo;
 import com.heu.cs.pojo.LocationPojo;
 import com.heu.cs.pojo.ReturnInfoPojo;
-import com.heu.cs.utils.GenericDao;
-import com.heu.cs.utils.GenericDaoImpl;
+import com.heu.cs.utils.GenericMethod;
+import com.heu.cs.utils.GenericMethodImpl;
 
 import java.text.DecimalFormat;
 
@@ -25,8 +25,9 @@ public class GetPriceDao {
             String startLongitude=startLocation.getLongitude();
             String endtLatitude=endLocation.getLatitude();
             String endLongitude=endLocation.getLongitude();
-            GenericDao genericDao=new GenericDaoImpl();
-            String result=genericDao.getPrice(startLatitude,startLongitude,endtLatitude,endLongitude);
+            GenericMethod genericMethod =new GenericMethodImpl();
+            String result= genericMethod.getPrice(startLatitude,startLongitude,endtLatitude,endLongitude);
+            //String dis=genericMethod.getDistance(startLatitude,startLongitude,endtLatitude,endLongitude);
             returnInfoPojo.setStatus(result);
             DecimalFormat df = new DecimalFormat("0.0");
             if(Double.parseDouble(result)>4.0){

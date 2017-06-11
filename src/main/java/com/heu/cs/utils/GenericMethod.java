@@ -7,13 +7,15 @@ import org.joda.time.DateTime;
 /**
  * Created by memgq on 2017/6/5.
  */
-public interface GenericDao {
+public interface GenericMethod {
 
     String getTimeDif(String targetTime);
 
     long getTimestamp(String t);
 
     void updateOrderId(Document document, MongoCollection collection);
+
+    String formatTelNumber(String telNumber);
 
     double rad(double d);
 

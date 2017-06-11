@@ -2,14 +2,9 @@ package com.heu.cs.api;
 
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
 import com.heu.cs.dao.orderdao.*;
-import com.heu.cs.pojo.LocationPojo;
 import com.heu.cs.pojo.ReturnInfoPojo;
 import com.heu.cs.service.image.ImageClient;
-import com.heu.cs.utils.GenericDao;
-import com.heu.cs.utils.GenericDaoImpl;
 import com.heu.cs.utils.TencentYouTu;
 import com.heu.cs.utils.TencentYouTuImpl;
 import org.apache.commons.io.FileUtils;
@@ -26,7 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.util.Calendar;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -264,6 +258,8 @@ public class OrderApi {
     }
 
 
+
+
     @GET
     @Path("/queryorderprogress")
     @Produces("text/plain;charset=utf-8")
@@ -290,6 +286,17 @@ public class OrderApi {
     public String getPriceURL(@QueryParam("location") String location) throws IOException {
         GetPriceDao getPriceDao = new GetPriceDao();
         return getPriceDao.getPrice(location);
+    }
+
+
+
+
+    @GET
+    @Path("/commitorder")
+    @Produces("text/plain;charset=utf-8")
+    public String commitOrderURL(@QueryParam("commit") double commit,@QueryParam("orderId") String orderId) throws IOException {
+        CommitOrderDao commitOrderDao=new CommitOrderDao();
+        return commitOrderDao.commitOrder(commit,orderId);
     }
 
 }

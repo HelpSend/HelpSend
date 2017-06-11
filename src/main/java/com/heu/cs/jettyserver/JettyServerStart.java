@@ -58,6 +58,7 @@ public class JettyServerStart {
         jerseyServlet.setInitParameter("jersey.config.server.provider.packages", "com.heu.cs.api");
         jerseyServlet.setInitParameter("jersey.config.server.provider.classnames",
                 "UploadFileService;org.glassfish.jersey.media.multipart.MultiPartFeature");
+
         ServletHolder staticServlet = context.addServlet(DefaultServlet.class, "/*");
         staticServlet.setInitParameter("resourceBase", "src/main/resources");
         staticServlet.setInitParameter("pathInfoOnly", "true");

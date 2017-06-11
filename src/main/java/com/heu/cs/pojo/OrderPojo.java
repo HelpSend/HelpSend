@@ -29,6 +29,15 @@ private String orderId="";
     private String orderPrice;
     private String orderReplyCode;
     private String emergency;
+    private String commit="-1";
+
+    public String getCommit() {
+        return commit;
+    }
+
+    public void setCommit(String commit) {
+        this.commit = commit;
+    }
 
     public String getEmergency() {
         return emergency;

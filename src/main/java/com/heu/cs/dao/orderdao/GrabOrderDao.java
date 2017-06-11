@@ -2,8 +2,8 @@ package com.heu.cs.dao.orderdao;
 
 import com.google.gson.Gson;
 import com.heu.cs.conndb.ConnMongoDB;
-import com.heu.cs.utils.GenericDao;
-import com.heu.cs.utils.GenericDaoImpl;
+import com.heu.cs.utils.GenericMethod;
+import com.heu.cs.utils.GenericMethodImpl;
 import com.heu.cs.pojo.*;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -32,9 +32,9 @@ public class GrabOrderDao {
         ReturnInfoPojo returnInfo=new ReturnInfoPojo();
         List<OrderPojo> orderPojoList= getOrderList();
         if(orderPojoList.size()>0) {
-            GenericDao genericDao =new GenericDaoImpl();
+            GenericMethod genericMethod =new GenericMethodImpl();
             for (OrderPojo order : orderPojoList) {
-                String distance = genericDao.getDistance(latitude, longitude, order.getStartLocation().getLatitude(), order.getStartLocation().getLongitude());
+                String distance = genericMethod.getDistance(latitude, longitude, order.getStartLocation().getLatitude(), order.getStartLocation().getLongitude());
                 if (Double.parseDouble(distance) < NEARBY) {
                     GrabOrderPojo grabOrderPojo = new GrabOrderPojo();
                     grabOrderPojo.setSendTime(order.getSendTime());
@@ -113,12 +113,12 @@ public class GrabOrderDao {
      * @return
      * @throws ParseException
      */
-    public String formatReceiveTime(String orderReceiveTime,DateTime nowDateTime,GenericDao genericDao) throws ParseException {
+    public String formatReceiveTime(String orderReceiveTime,DateTime nowDateTime,GenericMethod genericMethod) throws ParseException {
         String returnTime="";
         String[] tlist=orderReceiveTime.split(" ");
-        Long receiveTimeStamp= genericDao.getTimestamp(orderReceiveTime);
+        Long receiveTimeStamp= genericMethod.getTimestamp(orderReceiveTime);
         String todayStr= nowDateTime.toString(formatDateStr);
-        long todayTimeStamp= genericDao.getTimestamp(todayStr+timezero);
+        long todayTimeStamp= genericMethod.getTimestamp(todayStr+timezero);
         if(receiveTimeStamp<=todayTimeStamp&&receiveTimeStamp>nowDateTime.getMillis()){
             returnTime="今天 "+tlist[1];
         }else if (receiveTimeStamp<=todayTimeStamp+24*60*60&&receiveTimeStamp>todayTimeStamp){
@@ -141,9 +141,9 @@ public class GrabOrderDao {
      * @return
      * @throws ParseException
      */
-    private String formatSendTime(String orderSendTime,Long nowTimestamp,GenericDao genericDao) {
+    private String formatSendTime(String orderSendTime,Long nowTimestamp,GenericMethod genericMethod) {
         String sendTime="";
-        Long sendTimestamp= genericDao.getTimestamp(orderSendTime);
+        Long sendTimestamp= genericMethod.getTimestamp(orderSendTime);
         long r= sendTimestamp-nowTimestamp;
         if(r<=20*60){
             sendTime="立即";
@@ -191,15 +191,15 @@ public class GrabOrderDao {
             Document sortDocument=new Document();
             sortDocument.append("sendTime",1);
             findIterable = collection.find(document).sort(sortDocument).limit(20);
-            GenericDao genericDao =new GenericDaoImpl();
+            GenericMethod genericMethod =new GenericMethodImpl();
             for(Document d:findIterable){
                 OrderPojo order = gson.fromJson(d.toJson(), OrderPojo.class);
-                genericDao.updateOrderId(d,collection);
-                long receiveTimeStamp= genericDao.getTimestamp(order.getReceiveTime());
+                genericMethod.updateOrderId(d,collection);
+                long receiveTimeStamp= genericMethod.getTimestamp(order.getReceiveTime());
                 if(receiveTimeStamp>nowTimestamp){
                     order.setOrderId(d.get("_id").toString());
-                    order.setSendTime(formatSendTime(order.getSendTime(),nowTimestamp, genericDao));
-                    order.setReceiveTime(formatReceiveTime(order.getReceiveTime(),nowDateTime, genericDao)+" 之前");
+                    order.setSendTime(formatSendTime(order.getSendTime(),nowTimestamp, genericMethod));
+                    order.setReceiveTime(formatReceiveTime(order.getReceiveTime(),nowDateTime, genericMethod)+" 之前");
                     orderPojoList.add(order);
                 }else{
                     CancelOrderDao cancelOrderDao=new CancelOrderDao();
