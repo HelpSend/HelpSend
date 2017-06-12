@@ -31,6 +31,8 @@
 
     function doLocalUpload() {
         var formData = new FormData($( "#localuploadForm" )[0]);
+        console.log(formData);
+        console.log(typeof(formData))
         console.log($( "#localuploadForm" )[0])
         $.ajax({
             //url: 'http://mengqipoet.cn:8080/webapi/order/createorder',

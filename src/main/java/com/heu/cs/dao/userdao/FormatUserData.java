@@ -57,6 +57,8 @@ public class FormatUserData {
                 jsonObject.addProperty(s,getNickName());
             }else if(s.equals("gender")){
                 jsonObject.addProperty(s,"0");
+            }else if(s.equals("experience")){
+                jsonObject.addProperty(s,0);
             }
             else {
                 jsonObject.addProperty(s,"");

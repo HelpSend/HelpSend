@@ -25,17 +25,39 @@ public class CancelOrderDao {
             Document filter = new Document();
             filter.append("_id", new ObjectId(orderId));
             MongoCursor<Document> mongoCursor=collection.find(filter).iterator();
-            if (mongoCursor.hasNext()&&mongoCursor.next().get("orderStatus").equals("0")){
-                Document update = new Document();
-                update.append("$set", new Document("orderStatus", "-1"));
-                collection.updateOne(filter, update);
-                connMongoDB.getMongoClient().close();
-                returnInfoPojo.setStatus(operateSuccess);
-                returnInfoPojo.setMessage("成功取消订单");
-            }else {
-                returnInfoPojo.setStatus(operateFailure);
-                returnInfoPojo.setMessage("无法取消");
-            }
+            if (mongoCursor.hasNext()){
+
+                Document d=mongoCursor.next();
+                if(d.get("orderStatus").equals("0")){
+                    Document update = new Document();
+                    update.append("$set", new Document("orderStatus", "-1"));
+                    collection.updateOne(filter, update);
+
+
+                    MongoCollection userCollection=connMongoDB.getCollection("bbddb","user");
+                    Document userFilter=new Document();
+                    userFilter.append("userId",d.getString("orderOwnerId"));
+
+                    MongoCursor<Document> userCursor=userCollection.find(userFilter).iterator();
+                    int temp=-(int)(Double.parseDouble(d.get("orderPrice").toString())*10);
+                    returnInfoPojo.setMessage(String.valueOf(userCursor.next().getInteger("experience")+temp));
+                    userCursor.close();
+
+
+
+                    Document userUpdate=new Document();
+                    userUpdate.append("experience",temp);
+                    userCollection.findOneAndUpdate(userFilter,new Document("$inc",userUpdate));
+
+                    returnInfoPojo.setStatus(operateSuccess);
+                    connMongoDB.getMongoClient().close();
+
+                }else {
+                    returnInfoPojo.setStatus(operateFailure);
+                    returnInfoPojo.setMessage("无法取消");
+                }
+
+                }
             mongoCursor.close();
         }catch (Exception e){
             e.printStackTrace();

@@ -17,7 +17,6 @@ import org.joda.time.DateTime;
 public class ReceiveOrderDao {
     private final String operateSuccess="1";
     private final String operateFailure="0";
-    private final String SUCCUSSMSG="接单成功";
     private final String FAILUREMSG="接单失败";
     public String receiveOrder(String orderId,String orderReceiverId) {
         ReturnInfoPojo returnInfo = new ReturnInfoPojo();
@@ -33,6 +32,21 @@ public class ReceiveOrderDao {
                 MongoCursor<Document> mongoCursor=findIterable.iterator();
                 Document d=mongoCursor.next();
                 if(d.get("orderStatus").equals("0")){
+
+                    MongoCollection userCollection=connMongoDB.getCollection("bbddb","user");
+                    Document userFilter=new Document();
+                    userFilter.append("userId",orderReceiverId);
+                    MongoCursor<Document> userCursor=userCollection.find(userFilter).iterator();
+                    int temp=(int)(Double.parseDouble(d.getString("orderPrice"))*6);
+                    returnInfo.setMessage(String.valueOf(userCursor.next().getInteger("experience")+temp));
+                    userCursor.close();
+
+                    Document userUpdate=new Document();
+                    userUpdate.append("experience",temp);
+                    userCollection.findOneAndUpdate(userFilter,new Document("$inc",userUpdate));
+
+
+
                     DateTime dateTime=new DateTime();
                     Document update = new Document();
                     Document newValue=new Document();
@@ -41,8 +55,11 @@ public class ReceiveOrderDao {
                             .append("receiveOrderTime", dateTime.toString("yyyy-MM-dd HH:mm:ss"));
                     update.append("$set", newValue);
                     collection.updateOne(d, update);
+
+
                     returnInfo.setStatus(operateSuccess);
-                    returnInfo.setMessage(SUCCUSSMSG);
+
+
                 }else {
                     returnInfo.setStatus(operateFailure);
                     returnInfo.setMessage(FAILUREMSG);

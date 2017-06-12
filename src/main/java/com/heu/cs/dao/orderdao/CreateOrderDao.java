@@ -3,11 +3,13 @@ package com.heu.cs.dao.orderdao;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.heu.cs.pojo.ReturnInfoPojo;
 import com.heu.cs.utils.GenericMethod;
 import com.heu.cs.utils.GenericMethodImpl;
 import com.heu.cs.pojo.OrderPojo;
 import com.mongodb.client.MongoCollection;
 import com.heu.cs.conndb.ConnMongoDB;
+import com.mongodb.client.MongoCursor;
 import org.bson.Document;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -28,10 +30,11 @@ public class CreateOrderDao {
      * @param orderStr json格式的字符串
      * @return 返回操作状态，成功或失败
      */
-    public String insertOrder(String orderStr, String imagePath) {
+    public ReturnInfoPojo insertOrder(String orderStr, String imagePath) {
         /**
          * 先转成jsonObject ,然后格式化看有没有漏掉的字段，有的话加上
          */
+        ReturnInfoPojo returnInfoPojo=new ReturnInfoPojo();
         String operateResult="";
         DateTime d=new DateTime();
         String dateNowStr = d.toString("yyyy-MM-dd HH:mm:ss");
@@ -53,20 +56,35 @@ public class CreateOrderDao {
         } else {
             order.setImagePath(PROJECT_URL+imagePath);
         }
-        orderStr = gson.toJson(order);
+
         ConnMongoDB connMongoDB = new ConnMongoDB();
         try {
+            orderStr = gson.toJson(order);
             MongoCollection collection = connMongoDB.getCollection("bbddb", "normalorder");
             Document document = Document.parse(orderStr);
             collection.insertOne(document);
-            operateResult=operateSuccess;
+
+            MongoCollection userCollection=connMongoDB.getCollection("bbddb","user");
+            Document userFilter=new Document();
+            userFilter.append("userId",order.getOrderOwnerId());
+            MongoCursor<Document> userCursor=userCollection.find(userFilter).iterator();
+            int temp=(int)(Double.parseDouble(order.getOrderPrice())*10);
+            returnInfoPojo.setMessage(String.valueOf(userCursor.next().getInteger("experience")+temp));
+            userCursor.close();
+
+            Document update=new Document();
+            update.append("experience",temp);
+            userCollection.findOneAndUpdate(userFilter,new Document("$inc",update));
+            returnInfoPojo.setStatus(operateSuccess);
+
 
         } catch (Exception exception) {
             exception.printStackTrace();
-            operateResult=operateFailure;
+            returnInfoPojo.setStatus(operateFailure);
+            returnInfoPojo.setMessage("操作失败");
         }finally {
             connMongoDB.getMongoClient().close();
-            return operateResult;
+            return returnInfoPojo;
         }
 
     }

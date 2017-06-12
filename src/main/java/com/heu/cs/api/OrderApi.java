@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.heu.cs.dao.orderdao.*;
 import com.heu.cs.pojo.ReturnInfoPojo;
 import com.heu.cs.service.image.ImageClient;
+import com.heu.cs.utils.ImageCompress;
 import com.heu.cs.utils.TencentYouTu;
 import com.heu.cs.utils.TencentYouTuImpl;
 import org.apache.commons.io.FileUtils;
@@ -101,9 +102,13 @@ public class OrderApi {
                                  @FormDataParam("photos") FormDataContentDisposition disposition,
                                  @FormDataParam("orderinfo") String orderInfoStr) {
         ReturnInfoPojo returnInfo = new ReturnInfoPojo();
-        String status = "";
+        System.out.println("图片1");
+        System.out.println(disposition.getFileName());
+        System.out.println("图片2");
         CreateOrderDao createOrderDao = new CreateOrderDao();
         String imageName = disposition.getFileName();
+
+        System.out.println("图片名称："+imageName);
         Gson gson = new Gson();
         if (!imageName.equals("")) {
             imageName = Calendar.getInstance().getTimeInMillis() + imageName;
@@ -113,24 +118,24 @@ public class OrderApi {
             try {
                 //使用common io的文件写入操作
                 FileUtils.copyInputStreamToFile(fileInputStream, file);
+                ImageCompress imageCompress=new ImageCompress();
+                imageCompress.compressPic(ROOTPATH + ROOT_IMAGES_PATH + IMAGE_URL,ROOTPATH + ROOT_IMAGES_PATH + IMAGE_URL,imageName,imageName,500,500,true);
+
                 TencentYouTu tencentYouTu = new TencentYouTuImpl();
                 ImageClient imageClient = new ImageClient(appId, secretId, secretKey);
                 String pornRes = tencentYouTu.detectPorn(imgHostUrl, imageClient, bucketName);
                 System.out.println("检测结果："+pornRes);
                 imageClient.shutdown();
                 if (pornRes.equals("0")) {
-                    status = createOrderDao.insertOrder(orderInfoStr, IMAGE_URL + imageName);
-                    String s="";
+                    returnInfo = createOrderDao.insertOrder(orderInfoStr, IMAGE_URL + imageName);
                     String m="";
-                    if (status.equals("1")) {
-                        s="1";
-                        m="下单成功";
+                    if (returnInfo.getStatus().equals("1")) {
+
                     } else {
-                        s="0";
                         m="下单失败";
+                        returnInfo.setMessage(m);
                     }
-                    returnInfo.setStatus(s);
-                    returnInfo.setMessage(m);
+
                 } else {
                     returnInfo.setStatus("0");
                     returnInfo.setMessage("图片不合格");
@@ -145,12 +150,10 @@ public class OrderApi {
             }
 
         } else {
-            status = createOrderDao.insertOrder(orderInfoStr, IMAGE_URL);
-            if (status.equals("1")) {
-                returnInfo.setStatus(status);
-                returnInfo.setMessage("下单成功");
+            returnInfo= createOrderDao.insertOrder(orderInfoStr, IMAGE_URL);
+            if (returnInfo.getStatus().equals("1")) {
+
             } else {
-                returnInfo.setStatus("0");
                 returnInfo.setMessage("下单失败");
             }
             return gson.toJson(returnInfo, ReturnInfoPojo.class);

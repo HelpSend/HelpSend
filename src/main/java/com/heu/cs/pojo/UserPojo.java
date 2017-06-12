@@ -24,7 +24,7 @@ public class UserPojo {
     private String remark;
     private String status;
     private String createDate;
-    private String experience="0";
+    private int experience=0;
     private String score;
 
     public String getCreateDate() {
@@ -35,11 +35,11 @@ public class UserPojo {
         this.createDate = createDate;
     }
 
-    public String getExperience() {
+    public int getExperience() {
         return experience;
     }
 
-    public void setExperience(String experience) {
+    public void setExperience(int experience) {
         this.experience = experience;
     }
 
