@@ -27,6 +27,7 @@ public class GrabOrderDetailsDao {
 
             Document document = new Document();
             document.append("_id", new ObjectId(orderId));
+            System.out.println(document.toJson());
             FindIterable<Document> findIterable= orderCollection.find(document);
             GrapOrderDetailsPojo grapOrderDetailsPojo=new GrapOrderDetailsPojo();
             MongoCursor<Document> orderCursor=findIterable.iterator();

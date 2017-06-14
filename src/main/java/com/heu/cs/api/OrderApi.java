@@ -31,16 +31,16 @@ import java.util.logging.Logger;
  */
 @Path("/order")
 public class OrderApi {
-
-    private static final int appId = 1252947691;//      YOUR_APPID
-    private static final String secretId = "AKIDgGajkbKhx64pQpF5xc5MQIyCIG6nRgst";
-    private static final String secretKey = "0qdHl9YpvrcCbeZJsLdjdLtFQPDpFW4S";
-    private static final String HOST="http://mengqipoet.cn:8080/upload_images/";
-    // ImageClient
-
-
-    // 设置要操作的bucket
-    private static final String bucketName = "helpsendv1";
+//
+//    private static final int appId = ;//      YOUR_APPID
+//    private static final String secretId = "";
+//    private static final String secretKey = "";
+//    private static final String HOST="";
+//    // ImageClient
+//
+//
+//    // 设置要操作的bucket
+//    private static final String bucketName = "helpsendv1";
 
 
     @Context
@@ -55,8 +55,8 @@ public class OrderApi {
      */
     private static final String ROOTPATH = System.getProperty("user.dir");
     private static final String ROOT_IMAGES_PATH = "/src/main/resources";
-    private static final String JPG_CONTENT_TYPE = "image/jpeg";
-    private static final String PNG_CONTENT_TYPE = "image/png";
+//    private static final String JPG_CONTENT_TYPE = "image/jpeg";
+//    private static final String PNG_CONTENT_TYPE = "image/png";
     private static final String IMAGE_URL = "/upload_images/";
 
 
@@ -94,8 +94,9 @@ public class OrderApi {
      * @param orderInfoStr
      * @return
      */
+    /*
     @POST
-    @Path("/createorder")
+    @Path("/createorder1")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces("text/plain")
     public String cteateOrderURL(@FormDataParam("photos") InputStream fileInputStream,
@@ -159,7 +160,73 @@ public class OrderApi {
             return gson.toJson(returnInfo, ReturnInfoPojo.class);
         }
     }
+    */
 
+
+
+
+    /**
+     * 下单，可选择是否上传图片
+     *
+     * @param fileInputStream
+     * @param disposition
+     * @param orderInfoStr
+     * @return
+     */
+    @POST
+    @Path("/createorder")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces("text/plain")
+    public String cteateOrderURL(@FormDataParam("photos") InputStream fileInputStream,
+                                 @FormDataParam("photos") FormDataContentDisposition disposition,
+                                 @FormDataParam("orderinfo") String orderInfoStr) {
+        ReturnInfoPojo returnInfo = new ReturnInfoPojo();
+
+        CreateOrderDao createOrderDao = new CreateOrderDao();
+        String imageName = disposition.getFileName();
+
+        System.out.println("图片名称："+imageName);
+        Gson gson = new Gson();
+        if (!imageName.equals("")) {
+            imageName = Calendar.getInstance().getTimeInMillis() + imageName;
+            String imgUrl = ROOTPATH + ROOT_IMAGES_PATH + IMAGE_URL + imageName;
+            File file = new File(imgUrl);
+            try {
+                //使用common io的文件写入操作
+                FileUtils.copyInputStreamToFile(fileInputStream, file);
+                ImageCompress imageCompress=new ImageCompress();
+                imageCompress.compressPic(ROOTPATH + ROOT_IMAGES_PATH + IMAGE_URL,ROOTPATH + ROOT_IMAGES_PATH + IMAGE_URL,imageName,imageName,500,500,true);
+
+
+                    returnInfo = createOrderDao.insertOrder(orderInfoStr, IMAGE_URL + imageName);
+                    String m="";
+                    if (returnInfo.getStatus().equals("1")) {
+
+                    } else {
+                        m="下单失败";
+                        returnInfo.setMessage(m);
+                    }
+
+
+                return gson.toJson(returnInfo, ReturnInfoPojo.class);
+
+            } catch (IOException ex) {
+                Logger.getLogger(UploadFileApi.class.getName()).log(Level.SEVERE, null, ex);
+                returnInfo.setStatus("0");
+                returnInfo.setMessage("文件上传出错");
+                return gson.toJson(returnInfo, ReturnInfoPojo.class);
+            }
+
+        } else {
+            returnInfo= createOrderDao.insertOrder(orderInfoStr, IMAGE_URL);
+            if (returnInfo.getStatus().equals("1")) {
+
+            } else {
+                returnInfo.setMessage("下单失败");
+            }
+            return gson.toJson(returnInfo, ReturnInfoPojo.class);
+        }
+    }
 
     /**
      * 通过状态码来查询自己的不同状态的订单

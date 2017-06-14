@@ -9,6 +9,8 @@ import java.util.Map;
  */
 public interface SMSApiDao {
 
+    String getReplyInfo();
+
     String getUserInfo() throws IOException, URISyntaxException;
 
     String sendSms(String text, String mobile) throws IOException;

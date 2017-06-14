@@ -6,6 +6,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+
+import com.google.gson.Gson;
+import com.heu.cs.conndb.ConnMongoDB;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -15,6 +21,18 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.bson.Document;
+import org.glassfish.jersey.client.ClientResponse;
+import org.glassfish.jersey.client.JerseyClientBuilder;
+
+import javax.json.JsonObject;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 
 /**
  * Created by memgq on 2017/6/3.
@@ -38,9 +56,46 @@ public class SMSApiDaoImpl implements SMSApiDao {
     //编码格式。发送编码格式统一用UTF-8
     private  final String ENCODING = "UTF-8";
 
+    private final String URI_GET_REPLY="https://sms.yunpian.com/v2/sms/get_reply.json";
     //apikey
-    private final String apikey="e13d05decc833d0237d7ed0dc8137934";
+    private final String apikey=getApikey();
 
+
+
+    private String getApikey(){
+        ConnMongoDB connMongoDB=new ConnMongoDB();
+        MongoCollection collection=connMongoDB.getCollection("bbddb","secret");
+        Document filter=new Document("info","smsapikey");
+        MongoCursor<Document> cursor=collection.find(filter).iterator();
+        Document d=cursor.next();
+        return d.getString("apikey");
+    }
+
+
+
+    @Override
+    public String getReplyInfo(){
+
+        MultivaluedMap formData=new MultivaluedHashMap();
+        String ak=getApikey();
+        formData.add("apikey", ak);
+        formData.add("start_time", "2017-06-10 00:00:00");
+        formData.add("end_time", "2017-06-14 18:00:00");
+        formData.add("page_num", "1");
+        formData.add("page_size", "80");
+        MultivaluedMap head=new MultivaluedHashMap();
+        head.add("Accept","application/json");
+        head.add("Content-Type","application/x-www-form-urlencoded");
+
+        JerseyClientBuilder jerseyClientBuilder=new JerseyClientBuilder();
+        Client client=jerseyClientBuilder.build();
+        WebTarget target=client.target(URI_GET_REPLY);
+        target.request().headers(head);
+        Response response = target.request().buildPost(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED)).invoke();
+        System.out.println(response.readEntity(String.class));
+
+        return "";
+    }
 
 
     /**
@@ -168,4 +223,8 @@ public class SMSApiDaoImpl implements SMSApiDao {
         }
         return responseText;
     }
+
+
+
+
 }

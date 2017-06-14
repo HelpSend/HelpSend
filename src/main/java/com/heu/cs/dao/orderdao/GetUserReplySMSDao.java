@@ -15,6 +15,7 @@ public class GetUserReplySMSDao {
     public void getUserReplySMS(String sms_reply){
         Gson gson=new Gson();
         SMSReplyPojo smsReplyPojo=gson.fromJson(sms_reply,SMSReplyPojo.class);
+        System.out.println(gson.toJson(smsReplyPojo,SMSReplyPojo.class));
         ConnMongoDB connMongoDB=new ConnMongoDB();
         MongoCollection collection=connMongoDB.getCollection("bbddb","normalorder");
         Document filter=new Document();
