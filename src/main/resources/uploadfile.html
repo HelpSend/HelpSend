@@ -11,7 +11,7 @@
         var formData = new FormData($( "#serveruploadForm" )[0]);
         console.log($( "#serveruploadForm" )[0])
         $.ajax({
-            url: 'http://mengqipoet.cn:8080/webapi/order/createorder',
+            url: 'http://123.207.138.180:7012/webapi/order/createorderwithimg',
             //url: '/webapi/order/createorder',
             type: 'POST',
             data: formData,
@@ -36,7 +36,7 @@
         console.log($( "#localuploadForm" )[0])
         $.ajax({
             //url: 'http://mengqipoet.cn:8080/webapi/order/createorder',
-            url: '/webapi/order/createorder',
+            url: '/webapi/order/createorderwithimg',
             type: 'POST',
             data: formData,
             async: false,
@@ -52,6 +52,70 @@
             }
         });
     }
+
+
+
+
+
+
+
+
+
+
+
+    function doServer() {
+        var formData = new FormData($( "#serverForm" )[0]);
+        console.log(formData);
+        console.log(typeof(formData))
+        console.log($( "#serverForm" )[0])
+        $.ajax({
+            url: 'http://123.207.138.180:7012/webapi/order/createorderwithoutimg',
+            //url: '/webapi/order/createorder',
+            type: 'POST',
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (returndata) {
+
+                console.log(returndata);
+            },
+            error: function (returndata) {
+                console.log(returndata);
+            }
+        });
+    }
+
+
+    function doLocal() {
+        var formData = new FormData($( "#localForm" )[0]);
+        console.log(formData);
+        console.log(typeof(formData))
+        console.log($( "#localForm" )[0])
+        $.ajax({
+            //url: 'http://mengqipoet.cn:8080/webapi/order/createorder',
+            url: '/webapi/order/createorderwithoutimg',
+            type: 'POST',
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (returndata) {
+
+                console.log(returndata);
+            },
+            error: function (returndata) {
+                console.log(returndata);
+            }
+        });
+    }
+
+
+
+
+
 </script>
 <div>本地上传</div>
 <form id= "localuploadForm" >
@@ -65,6 +129,19 @@
     <p >上传文件： <input type="file" name="photos"/></p>
     <input type="button" value="上传" onclick="doServerUpload()" />
 </form>
+
+
+<div>远程无图片上传</div>
+<form id= "serverForm" method="post" action="/webapi/order/createorderwithoutimg">
+    <p >指定文件名： <input type="text" id="serverwithoutimg" name="orderinfo" value= ""/></p >
+    <input type="button" value="上传" onclick="doServer()" />
+</form>
+<div>本地无图片上传</div>
+<form id= "localForm"  method="post" action="/webapi/order/createorderwithoutimg">
+    <p >指定文件名： <input type="text" id="localwithimg" name="orderinfo" value= ""/></p >
+    <input type="submit" value="上传"  />
+</form>
+
 
 </body>
 </html>

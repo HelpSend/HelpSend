@@ -2,6 +2,9 @@ package com.heu.cs.dao.orderdao;
 
 import com.google.gson.Gson;
 import com.heu.cs.conndb.ConnMongoDB;
+import com.heu.cs.pojo.Order.GrabOrderPojo;
+import com.heu.cs.pojo.Order.GrabOrderResponsePojo;
+import com.heu.cs.pojo.Order.OrderPojo;
 import com.heu.cs.utils.GenericMethod;
 import com.heu.cs.utils.GenericMethodImpl;
 import com.heu.cs.pojo.*;
@@ -31,6 +34,7 @@ public class GrabOrderDao {
         Gson gson=new Gson();
         ReturnInfoPojo returnInfo=new ReturnInfoPojo();
         List<OrderPojo> orderPojoList= getOrderList();
+        GrabOrderResponsePojo grabOrderResponsePojo = new GrabOrderResponsePojo();
         if(orderPojoList.size()>0) {
             GenericMethod genericMethod =new GenericMethodImpl();
             for (OrderPojo order : orderPojoList) {
@@ -49,16 +53,16 @@ public class GrabOrderDao {
                     grabOrderPojo.setDistance(distance + " 公里");
                     grabOrderPojo.setOrderPrice(order.getOrderPrice()+" 元");
                     grabOrderPojoList.add(grabOrderPojo);
-                    GrabOrderResponsePojo grabOrderResponsePojo = new GrabOrderResponsePojo();
+
                     grabOrderResponsePojo.setStatus(operateSuccess);
                     grabOrderResponsePojo.setMessage(grabOrderPojoList);
                     returnRes = gson.toJson(grabOrderResponsePojo, GrabOrderResponsePojo.class);
                 }
             }
         }else {
-            returnInfo.setStatus(operateFailure);
-            returnInfo.setMessage("查询失败");
-            returnRes=gson.toJson(returnInfo,ReturnInfoPojo.class);
+            grabOrderResponsePojo.setStatus(operateSuccess);
+            grabOrderResponsePojo.setMessage(grabOrderPojoList);
+            returnRes=gson.toJson(grabOrderResponsePojo, GrabOrderResponsePojo.class);
         }
         return returnRes;
 

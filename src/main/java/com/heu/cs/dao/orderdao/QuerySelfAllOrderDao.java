@@ -2,8 +2,8 @@ package com.heu.cs.dao.orderdao;
 
 import com.google.gson.Gson;
 import com.heu.cs.conndb.ConnMongoDB;
-import com.heu.cs.pojo.OrderPojo;
-import com.heu.cs.pojo.QueryOrderResponsePojo;
+import com.heu.cs.pojo.Order.OrderPojo;
+import com.heu.cs.pojo.Order.QueryOrderResponsePojo;
 import com.heu.cs.pojo.ReturnInfoPojo;
 import com.mongodb.MongoException;
 import com.mongodb.client.FindIterable;

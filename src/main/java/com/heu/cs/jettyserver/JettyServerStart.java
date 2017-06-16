@@ -48,7 +48,7 @@ public class JettyServerStart {
 
 
         BasicConfigurator.configure();
-        Server jettyServer = new Server(8080);
+        Server jettyServer = new Server(7012);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
         ServletHolder jerseyServlet = context.addServlet(

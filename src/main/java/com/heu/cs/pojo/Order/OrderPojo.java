@@ -1,4 +1,4 @@
-package com.heu.cs.pojo;
+package com.heu.cs.pojo.Order;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

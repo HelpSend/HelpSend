@@ -3,6 +3,10 @@ package com.heu.cs.dao.orderdao;
 import com.google.gson.Gson;
 import com.heu.cs.conndb.ConnMongoDB;
 import com.heu.cs.pojo.*;
+import com.heu.cs.pojo.Order.GrabOrderDetailsResponsePojo;
+import com.heu.cs.pojo.Order.GrapOrderDetailsPojo;
+import com.heu.cs.pojo.Order.OrderPojo;
+import com.heu.cs.pojo.User.UserPojo;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
@@ -48,17 +52,23 @@ public class GrabOrderDetailsDao {
                 grapOrderDetailsPojo.setSenderTel(order.getSenderTel());
                 grapOrderDetailsPojo.setReceiverTel(order.getReceiverTel());
                 grapOrderDetailsPojo.setCommit(order.getCommit());
-                MongoCollection userCollection = connMongoDB.getCollection("bbddb", "user");
-                Document userDocument = new Document();
-                userDocument.append("_id", new ObjectId(order.getOrderOwnerId()));
-                FindIterable<Document> userFindIterable = userCollection.find(userDocument);
-                for (Document usrdoc : userFindIterable) {
-                    UserPojo userPojo=gson.fromJson(usrdoc.toJson(),UserPojo.class);
-                    grapOrderDetailsPojo.setOrderOwnerGender(userPojo.getGender());
-                    grapOrderDetailsPojo.setOrderOwnerAvatarPath(userPojo.getAvatarPath());
-                    grapOrderDetailsPojo.setOrderOwnerNickName(userPojo.getNickName());
 
+                MongoCollection userCollection = connMongoDB.getCollection("bbddb", "user");
+                Document orderOwnerDocument = new Document("userId",order.getOrderOwnerId());
+                FindIterable<Document> orderOwnerFindIterable = userCollection.find(orderOwnerDocument);
+                for (Document usrdoc : orderOwnerFindIterable) {
+                    grapOrderDetailsPojo.setOrderOwnerGender(usrdoc.getString("gender"));
+                    grapOrderDetailsPojo.setOrderOwnerAvatarPath(usrdoc.getString("avatarPath"));
+                    grapOrderDetailsPojo.setOrderOwnerNickName(usrdoc.getString("nickName"));
                 }
+
+                Document orderReceiverDocument = new Document("userId",order.getOrderReceiverId());
+                FindIterable<Document> orderReceiverFindIterable = userCollection.find(orderReceiverDocument);
+                for (Document usrdoc : orderReceiverFindIterable) {
+
+                    grapOrderDetailsPojo.setOrderReceiverAvatarPath(usrdoc.getString("avatarPath"));
+                }
+
                 GrabOrderDetailsResponsePojo grabOrderDetailsResponsePojo = new GrabOrderDetailsResponsePojo();
                 grabOrderDetailsResponsePojo.setStatus(operateSuccess);
                 grabOrderDetailsResponsePojo.setMessage(grapOrderDetailsPojo);

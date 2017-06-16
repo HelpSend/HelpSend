@@ -80,7 +80,7 @@ public class SMSApiDaoImpl implements SMSApiDao {
         String ak=getApikey();
         formData.add("apikey", ak);
         formData.add("start_time", "2017-06-10 00:00:00");
-        formData.add("end_time", "2017-06-14 18:00:00");
+        formData.add("end_time", "2017-06-15 11:20:00");
         formData.add("page_num", "1");
         formData.add("page_size", "80");
         MultivaluedMap head=new MultivaluedHashMap();

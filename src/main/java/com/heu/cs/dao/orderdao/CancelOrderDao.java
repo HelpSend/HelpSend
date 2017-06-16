@@ -40,7 +40,7 @@ public class CancelOrderDao {
 
                     MongoCursor<Document> userCursor=userCollection.find(userFilter).iterator();
                     int temp=-(int)(Double.parseDouble(d.get("orderPrice").toString())*10);
-                    returnInfoPojo.setMessage(String.valueOf(userCursor.next().getInteger("experience")+temp));
+                    returnInfoPojo.setExp(String.valueOf(userCursor.next().getInteger("experience")+temp));
                     userCursor.close();
 
 
@@ -50,6 +50,7 @@ public class CancelOrderDao {
                     userCollection.findOneAndUpdate(userFilter,new Document("$inc",userUpdate));
 
                     returnInfoPojo.setStatus(operateSuccess);
+                    returnInfoPojo.setMessage("取消成功");
                     connMongoDB.getMongoClient().close();
 
                 }else {

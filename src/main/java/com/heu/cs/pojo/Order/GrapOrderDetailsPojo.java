@@ -1,4 +1,4 @@
-package com.heu.cs.pojo;
+package com.heu.cs.pojo.Order;
 
 /**
  * Created by memgq on 2017/5/29.
@@ -6,6 +6,7 @@ package com.heu.cs.pojo;
 public class GrapOrderDetailsPojo {
     private String remark;
     private String orderOwnerAvatarPath;
+    private String orderReceiverAvatarPath;
     private String orderOwnerGender;
     private String orderId;
     private LocationPojo startLocationPojo;
@@ -20,6 +21,14 @@ public class GrapOrderDetailsPojo {
     private String senderTel;
     private String receiverTel;
     private String commit;
+
+    public String getOrderReceiverAvatarPath() {
+        return orderReceiverAvatarPath;
+    }
+
+    public void setOrderReceiverAvatarPath(String orderReceiverAvatarPath) {
+        this.orderReceiverAvatarPath = orderReceiverAvatarPath;
+    }
 
     public String getCommit() {
         return commit;

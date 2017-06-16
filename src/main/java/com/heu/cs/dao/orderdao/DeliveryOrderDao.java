@@ -6,7 +6,7 @@ import com.heu.cs.utils.GenerateVerificationCode;
 import com.heu.cs.utils.GenerateVerificationCodeImpl;
 import com.heu.cs.utils.SMSApiDaoImpl;
 import com.heu.cs.pojo.ReturnInfoPojo;
-import com.heu.cs.pojo.VrfCodeResponsePojo;
+import com.heu.cs.pojo.User.VrfCodeResponsePojo;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import org.bson.Document;

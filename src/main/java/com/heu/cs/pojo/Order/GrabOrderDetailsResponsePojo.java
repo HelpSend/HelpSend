@@ -1,4 +1,4 @@
-package com.heu.cs.pojo;
+package com.heu.cs.pojo.Order;
 
 /**
  * Created by memgq on 2017/5/29.

@@ -32,8 +32,13 @@ public class GenericMethodImpl implements GenericMethod {
 
     @Override
     public long getTimestamp(String t){
+        if(!t.equals("")&&!t.isEmpty()){
         DateTime dateTime= formatDateTime.parseDateTime(t);
-        return dateTime.getMillis();
+            return dateTime.getMillis();
+        }else {
+            return 1497516839;
+        }
+
     }
 
     @Override

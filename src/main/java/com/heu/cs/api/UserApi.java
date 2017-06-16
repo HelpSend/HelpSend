@@ -1,5 +1,6 @@
 package com.heu.cs.api;
 
+import com.heu.cs.dao.userdao.GetExpByIdDao;
 import com.heu.cs.dao.userdao.QuickLoginDao;
 import com.heu.cs.dao.userdao.SendQuickLoginCodeDao;
 
@@ -50,5 +51,18 @@ public class UserApi {
         String resultStr=quickLoginDao.quickLogin(telNumber);
         return resultStr;
     }
+
+    @GET
+    @Path("/getexpbyuserid")
+    @Produces("text/plain;charset=utf-8")
+    public String getExpByUserId(@QueryParam("userId") String userId) throws IOException {
+        GetExpByIdDao getExpByIdDao=new GetExpByIdDao();
+        String resultStr=getExpByIdDao.getExpById(userId);
+        return resultStr;
+    }
+
+
+
+
 
 }

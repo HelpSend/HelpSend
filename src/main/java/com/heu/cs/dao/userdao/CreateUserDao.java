@@ -2,7 +2,7 @@ package com.heu.cs.dao.userdao;
 
 import com.google.gson.Gson;
 import com.heu.cs.conndb.ConnMongoDB;
-import com.heu.cs.pojo.UserPojo;
+import com.heu.cs.pojo.User.UserPojo;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
 

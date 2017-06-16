@@ -2,7 +2,7 @@ package com.heu.cs.dao.userdao;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.heu.cs.pojo.UserPojo;
+import com.heu.cs.pojo.User.UserPojo;
 
 import java.util.List;
 import java.util.Random;
@@ -12,7 +12,7 @@ import java.util.Random;
  */
 public class FormatUserData {
 
-    private  final String PROJECT_URL="http://mengqipoet.cn:8080/userimage/";
+    private  final String PROJECT_URL="http://123.207.138.180:7012/userimage/";
     private final String preName="defaultavatar";
     private final String IMAGE_TYPE=".jpg";
     private final String[] NICKNAME={"2017爱你要去","早茶月光","、凭凑不齐","nI、唯一","爱与你同在",

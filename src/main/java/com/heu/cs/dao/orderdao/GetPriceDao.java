@@ -1,8 +1,8 @@
 package com.heu.cs.dao.orderdao;
 
 import com.google.gson.Gson;
-import com.heu.cs.pojo.GetPricePojo;
-import com.heu.cs.pojo.LocationPojo;
+import com.heu.cs.pojo.Order.GetPricePojo;
+import com.heu.cs.pojo.Order.LocationPojo;
 import com.heu.cs.pojo.ReturnInfoPojo;
 import com.heu.cs.utils.GenericMethod;
 import com.heu.cs.utils.GenericMethodImpl;

@@ -38,7 +38,7 @@ public class ReceiveOrderDao {
                     userFilter.append("userId",orderReceiverId);
                     MongoCursor<Document> userCursor=userCollection.find(userFilter).iterator();
                     int temp=(int)(Double.parseDouble(d.getString("orderPrice"))*6);
-                    returnInfo.setMessage(String.valueOf(userCursor.next().getInteger("experience")+temp));
+                    returnInfo.setExp(String.valueOf(userCursor.next().getInteger("experience")+temp));
                     userCursor.close();
 
                     Document userUpdate=new Document();
@@ -58,6 +58,7 @@ public class ReceiveOrderDao {
 
 
                     returnInfo.setStatus(operateSuccess);
+                    returnInfo.setMessage("成功接单");
 
 
                 }else {

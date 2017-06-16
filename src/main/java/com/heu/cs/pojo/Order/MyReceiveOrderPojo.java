@@ -1,22 +1,13 @@
-package com.heu.cs.pojo;
+package com.heu.cs.pojo.Order;
 
 /**
  * Created by memgq on 2017/6/5.
  */
-public class MyPutOrderPojo {
+public class MyReceiveOrderPojo {
     private String orderId;
     private String goodsName;
     private String orderStatus;
     private String orderTime;
-    private String commit;
-
-    public String getCommit() {
-        return commit;
-    }
-
-    public void setCommit(String commit) {
-        this.commit = commit;
-    }
 
     public String getOrderTime() {
         return orderTime;

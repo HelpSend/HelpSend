@@ -89,78 +89,27 @@ public class OrderApi {
     /**
      * 下单，可选择是否上传图片
      *
-     * @param fileInputStream
-     * @param disposition
      * @param orderInfoStr
      * @return
      */
-    /*
     @POST
-    @Path("/createorder1")
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Produces("text/plain")
-    public String cteateOrderURL(@FormDataParam("photos") InputStream fileInputStream,
-                                 @FormDataParam("photos") FormDataContentDisposition disposition,
-                                 @FormDataParam("orderinfo") String orderInfoStr) {
-        ReturnInfoPojo returnInfo = new ReturnInfoPojo();
-        System.out.println("图片1");
-        System.out.println(disposition.getFileName());
-        System.out.println("图片2");
+    @Path("/createorderwithoutimg")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces("text/plain;charset=utf-8")
+    public String cteateOrderWithoutImgURL(@FormParam("orderinfo") String orderInfoStr) {
+        ReturnInfoPojo returnInfo ;
         CreateOrderDao createOrderDao = new CreateOrderDao();
-        String imageName = disposition.getFileName();
-
-        System.out.println("图片名称："+imageName);
         Gson gson = new Gson();
-        if (!imageName.equals("")) {
-            imageName = Calendar.getInstance().getTimeInMillis() + imageName;
-            String imgUrl = ROOTPATH + ROOT_IMAGES_PATH + IMAGE_URL + imageName;
-            String imgHostUrl=HOST+imageName;
-            File file = new File(imgUrl);
-            try {
-                //使用common io的文件写入操作
-                FileUtils.copyInputStreamToFile(fileInputStream, file);
-                ImageCompress imageCompress=new ImageCompress();
-                imageCompress.compressPic(ROOTPATH + ROOT_IMAGES_PATH + IMAGE_URL,ROOTPATH + ROOT_IMAGES_PATH + IMAGE_URL,imageName,imageName,500,500,true);
-
-                TencentYouTu tencentYouTu = new TencentYouTuImpl();
-                ImageClient imageClient = new ImageClient(appId, secretId, secretKey);
-                String pornRes = tencentYouTu.detectPorn(imgHostUrl, imageClient, bucketName);
-                System.out.println("检测结果："+pornRes);
-                imageClient.shutdown();
-                if (pornRes.equals("0")) {
-                    returnInfo = createOrderDao.insertOrder(orderInfoStr, IMAGE_URL + imageName);
-                    String m="";
-                    if (returnInfo.getStatus().equals("1")) {
-
-                    } else {
-                        m="下单失败";
-                        returnInfo.setMessage(m);
-                    }
-
-                } else {
-                    returnInfo.setStatus("0");
-                    returnInfo.setMessage("图片不合格");
-                }
-                return gson.toJson(returnInfo, ReturnInfoPojo.class);
-
-            } catch (IOException ex) {
-                Logger.getLogger(UploadFileApi.class.getName()).log(Level.SEVERE, null, ex);
-                returnInfo.setStatus("0");
-                returnInfo.setMessage("文件上传出错");
-                return gson.toJson(returnInfo, ReturnInfoPojo.class);
-            }
+        returnInfo= createOrderDao.insertOrder(orderInfoStr, IMAGE_URL);
+        if (returnInfo.getStatus().equals("1")) {
 
         } else {
-            returnInfo= createOrderDao.insertOrder(orderInfoStr, IMAGE_URL);
-            if (returnInfo.getStatus().equals("1")) {
-
-            } else {
-                returnInfo.setMessage("下单失败");
-            }
-            return gson.toJson(returnInfo, ReturnInfoPojo.class);
+            returnInfo.setMessage("下单失败");
         }
+        return gson.toJson(returnInfo, ReturnInfoPojo.class);
+
     }
-    */
+
 
 
 
@@ -174,10 +123,10 @@ public class OrderApi {
      * @return
      */
     @POST
-    @Path("/createorder")
+    @Path("/createorderwithimg")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Produces("text/plain")
-    public String cteateOrderURL(@FormDataParam("photos") InputStream fileInputStream,
+    @Produces("text/plain;charset=utf-8")
+    public String cteateOrderWithImgURL(@FormDataParam("photos") InputStream fileInputStream,
                                  @FormDataParam("photos") FormDataContentDisposition disposition,
                                  @FormDataParam("orderinfo") String orderInfoStr) {
         ReturnInfoPojo returnInfo = new ReturnInfoPojo();

@@ -2,7 +2,7 @@ package com.heu.cs.dao.orderdao;
 
 import com.google.gson.Gson;
 import com.heu.cs.conndb.ConnMongoDB;
-import com.heu.cs.pojo.SMSReplyPojo;
+import com.heu.cs.pojo.User.SMSReplyPojo;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import org.bson.Document;

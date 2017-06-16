@@ -1,7 +1,7 @@
 package com.heu.cs.dao.orderdao;
 
 import com.google.gson.JsonObject;
-import com.heu.cs.pojo.OrderPojo;
+import com.heu.cs.pojo.Order.OrderPojo;
 
 import java.util.List;
 

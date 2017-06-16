@@ -6,6 +6,15 @@ package com.heu.cs.pojo;
 public class ReturnInfoPojo {
     private String status="";
     private String message="";
+    private String exp="";
+
+    public String getExp() {
+        return exp;
+    }
+
+    public void setExp(String exp) {
+        this.exp = exp;
+    }
 
     public String getStatus() {
         return status;
