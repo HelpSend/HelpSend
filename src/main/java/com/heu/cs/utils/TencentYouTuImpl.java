@@ -13,7 +13,6 @@ import com.heu.cs.pojo.ReturnInfoPojo;
 import com.heu.cs.pojo.User.TextInfoPojo;
 import com.heu.cs.service.image.ImageClient;
 import com.heu.cs.service.image.common_utils.CommonFileUtils;
-import com.heu.cs.service.image.demo.Demo;
 import com.heu.cs.service.image.request.FaceCompareRequest;
 import com.heu.cs.service.image.request.FaceIdCardCompareRequest;
 import com.heu.cs.service.image.request.IdcardDetectRequest;
@@ -79,7 +78,7 @@ public class TencentYouTuImpl implements TencentYouTu {
             idcardNameList[0] = nameList[0];
             idcardImageList[0] = CommonFileUtils.getFileContent(idcardPathList[0]);
         } catch (Exception ex) {
-            Logger.getLogger(Demo.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TencentYouTuImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         IdcardDetectRequest idReq = new IdcardDetectRequest(keylist[3], idcardNameList, idcardImageList, 0);
         String ret = imageClient.idcardDetect(idReq);
@@ -92,7 +91,7 @@ public class TencentYouTuImpl implements TencentYouTu {
             idcardNameList[0] = nameList[1];
             idcardImageList[0] = CommonFileUtils.getFileContent(idcardPathList[1]);
         } catch (Exception ex) {
-            Logger.getLogger(Demo.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TencentYouTuImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         idReq = new IdcardDetectRequest(keylist[3], idcardNameList, idcardImageList, 1);
         ret = imageClient.idcardDetect(idReq);

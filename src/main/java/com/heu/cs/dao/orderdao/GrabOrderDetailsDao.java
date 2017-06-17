@@ -72,11 +72,12 @@ public class GrabOrderDetailsDao {
                 grabOrderDetailsResponsePojo.setStatus(operateSuccess);
                 grabOrderDetailsResponsePojo.setMessage(grapOrderDetailsPojo);
                 returnResult = gson.toJson(grabOrderDetailsResponsePojo, GrabOrderDetailsResponsePojo.class);
-                orderCursor.close();
+
             }else {
                 returnInfoPojo.setStatus(operateFailure);
                 returnInfoPojo.setMessage("查找失败");
             }
+            orderCursor.close();
         }catch (Exception e){
             e.printStackTrace();
             returnInfoPojo.setStatus(operateFailure);
