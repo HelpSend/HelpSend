@@ -28,12 +28,14 @@ public class QuickLoginDao {
             MongoCursor<Document> mongoCursor =findIterable.iterator();
             if(mongoCursor.hasNext()){
                 Document d= mongoCursor.next();
-                Document update = new Document();
-                update.append("$set", new Document("userId",d.get("_id").toString()));
-                collection.updateOne(d, update);
                 UserPojo userPojo=gson.fromJson(d.toJson(), UserPojo.class);
+                if(d.getString("userId").equals("")){
+                    Document update = new Document();
+                    update.append("$set", new Document("userId",d.get("_id").toString()));
+                    collection.updateOne(d, update);
+                    userPojo.setUserId(d.get("_id").toString());
+                }
                 userPojo.setStatus(operateSuccess);
-                userPojo.setUserId(d.get("_id").toString());
                 resultStr=gson.toJson(userPojo,UserPojo.class);
             }else {
                 CreateUserDao createUserDao =new CreateUserDao();

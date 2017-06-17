@@ -1,21 +1,19 @@
 package com.heu.cs.pojo.User;
 
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-
 /**
- * Created by memgq on 2017/6/16.
+ * Created by memgq on 2017/6/17.
  */
 public class TextInfoPojo {
+    private String userId;
     private String name;
-    private String IdCardNumber;
-    private String UserId;
+    private String idCard;
 
     public String getUserId() {
-        return UserId;
+        return userId;
     }
 
     public void setUserId(String userId) {
-        UserId = userId;
+        this.userId = userId;
     }
 
     public String getName() {
@@ -26,11 +24,11 @@ public class TextInfoPojo {
         this.name = name;
     }
 
-    public String getIdCardNumber() {
-        return IdCardNumber;
+    public String getIdCard() {
+        return idCard;
     }
 
-    public void setIdCardNumber(String idCardNumber) {
-        IdCardNumber = idCardNumber;
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
     }
 }

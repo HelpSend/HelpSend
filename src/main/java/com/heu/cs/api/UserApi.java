@@ -1,6 +1,7 @@
 package com.heu.cs.api;
 
 import com.heu.cs.dao.userdao.GetExpByIdDao;
+import com.heu.cs.dao.userdao.GetRoleByUserIdDao;
 import com.heu.cs.dao.userdao.QuickLoginDao;
 import com.heu.cs.dao.userdao.SendQuickLoginCodeDao;
 
@@ -60,6 +61,15 @@ public class UserApi {
         String resultStr=getExpByIdDao.getExpById(userId);
         return resultStr;
     }
+
+    @GET
+    @Path("/getrolebyuserid")
+    @Produces("text/plain;charset=utf-8")
+    public String getRoleByUserId(@QueryParam("userId") String userId) throws IOException {
+        GetRoleByUserIdDao getRoleByUserIdDao=new GetRoleByUserIdDao();
+        return getRoleByUserIdDao.getRoleByUserId(userId);
+    }
+
 
 
 

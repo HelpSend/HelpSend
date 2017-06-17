@@ -6,9 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 
-import com.google.gson.Gson;
 import com.heu.cs.conndb.ConnMongoDB;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
@@ -22,10 +20,8 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.bson.Document;
-import org.glassfish.jersey.client.ClientResponse;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 
-import javax.json.JsonObject;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
@@ -68,6 +64,8 @@ public class SMSApiDaoImpl implements SMSApiDao {
         Document filter=new Document("info","smsapikey");
         MongoCursor<Document> cursor=collection.find(filter).iterator();
         Document d=cursor.next();
+        cursor.close();
+        connMongoDB.getMongoClient().close();
         return d.getString("apikey");
     }
 

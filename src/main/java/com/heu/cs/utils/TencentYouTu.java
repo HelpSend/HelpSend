@@ -8,5 +8,7 @@ import com.heu.cs.service.image.ImageClient;
 public interface TencentYouTu {
 
 
-    String detectPorn(String url,ImageClient imageClient,String bucketName);
+    String detectPorn(String url);
+
+    String ocrIdCard(String textInfo, String[] idCardPathList,String[] nameList);
 }

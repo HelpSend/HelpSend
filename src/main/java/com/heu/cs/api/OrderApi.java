@@ -5,9 +5,7 @@ import com.google.gson.Gson;
 import com.heu.cs.dao.orderdao.*;
 import com.heu.cs.pojo.ReturnInfoPojo;
 import com.heu.cs.service.image.ImageClient;
-import com.heu.cs.utils.ImageCompress;
-import com.heu.cs.utils.TencentYouTu;
-import com.heu.cs.utils.TencentYouTuImpl;
+import com.heu.cs.utils.*;
 import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -76,7 +74,6 @@ public class OrderApi {
      */
     @GET
     @Path("/receiveorder")
-//    @Consumes(MediaType.APPLICATION_JSON)
     @Produces("text/plain;charset=utf-8")
     public String receiveOrderURL(@QueryParam("orderId") String orderId,
                                   @QueryParam("orderReceiverId") String orderReceiverId) {
@@ -87,7 +84,7 @@ public class OrderApi {
 
 
     /**
-     * 下单，可选择是否上传图片
+     * 下单，无图片
      *
      * @param orderInfoStr
      * @return
@@ -115,7 +112,7 @@ public class OrderApi {
 
 
     /**
-     * 下单，可选择是否上传图片
+     * 下单，有图片
      *
      * @param fileInputStream
      * @param disposition
@@ -130,51 +127,23 @@ public class OrderApi {
                                  @FormDataParam("photos") FormDataContentDisposition disposition,
                                  @FormDataParam("orderinfo") String orderInfoStr) {
         ReturnInfoPojo returnInfo = new ReturnInfoPojo();
-
-        CreateOrderDao createOrderDao = new CreateOrderDao();
         String imageName = disposition.getFileName();
-
-        System.out.println("图片名称："+imageName);
+        System.out.println("图片名称：" + imageName);
         Gson gson = new Gson();
-        if (!imageName.equals("")) {
-            imageName = Calendar.getInstance().getTimeInMillis() + imageName;
-            String imgUrl = ROOTPATH + ROOT_IMAGES_PATH + IMAGE_URL + imageName;
-            File file = new File(imgUrl);
-            try {
-                //使用common io的文件写入操作
-                FileUtils.copyInputStreamToFile(fileInputStream, file);
-                ImageCompress imageCompress=new ImageCompress();
-                imageCompress.compressPic(ROOTPATH + ROOT_IMAGES_PATH + IMAGE_URL,ROOTPATH + ROOT_IMAGES_PATH + IMAGE_URL,imageName,imageName,500,500,true);
-
-
-                    returnInfo = createOrderDao.insertOrder(orderInfoStr, IMAGE_URL + imageName);
-                    String m="";
-                    if (returnInfo.getStatus().equals("1")) {
-
-                    } else {
-                        m="下单失败";
-                        returnInfo.setMessage(m);
-                    }
-
-
-                return gson.toJson(returnInfo, ReturnInfoPojo.class);
-
-            } catch (IOException ex) {
-                Logger.getLogger(UploadFileApi.class.getName()).log(Level.SEVERE, null, ex);
-                returnInfo.setStatus("0");
-                returnInfo.setMessage("文件上传出错");
-                return gson.toJson(returnInfo, ReturnInfoPojo.class);
-            }
-
-        } else {
-            returnInfo= createOrderDao.insertOrder(orderInfoStr, IMAGE_URL);
-            if (returnInfo.getStatus().equals("1")) {
-
-            } else {
+        imageName = Calendar.getInstance().getTimeInMillis() + imageName;
+        UploadFile uploadFile = new UploadFileImpl();
+        String res = uploadFile.uploadAndCompressImage(fileInputStream, ROOTPATH + ROOT_IMAGES_PATH + IMAGE_URL, imageName);
+        if (res.equals("1")) {
+            CreateOrderDao createOrderDao = new CreateOrderDao();
+            returnInfo = createOrderDao.insertOrder(orderInfoStr, IMAGE_URL + imageName);
+            if (returnInfo.getStatus().equals("0")) {
                 returnInfo.setMessage("下单失败");
             }
-            return gson.toJson(returnInfo, ReturnInfoPojo.class);
+        } else {
+            returnInfo.setStatus("0");
+            returnInfo.setMessage("图片上传失败");
         }
+        return gson.toJson(returnInfo, ReturnInfoPojo.class);
     }
 
     /**

@@ -22,6 +22,8 @@ public class GetExpByIdDao {
         returnInfoPojo.setExp(d.get("experience").toString());
         returnInfoPojo.setStatus("1");
         returnInfoPojo.setMessage("");
+        cursor.close();
+        connMongoDB.getMongoClient().close();
         return gson.toJson(returnInfoPojo,ReturnInfoPojo.class);
     }
 }
