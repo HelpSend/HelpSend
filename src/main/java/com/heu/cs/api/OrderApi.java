@@ -7,6 +7,7 @@ import com.heu.cs.pojo.ReturnInfoPojo;
 import com.heu.cs.service.image.ImageClient;
 import com.heu.cs.utils.*;
 import org.apache.commons.io.FileUtils;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -93,7 +94,7 @@ public class OrderApi {
     @Path("/createorderwithoutimg")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces("text/plain;charset=utf-8")
-    public String cteateOrderWithoutImgURL(@FormParam("orderinfo") String orderInfoStr) {
+    public String createOrderWithoutImgURL(@FormParam("orderinfo") String orderInfoStr) {
         ReturnInfoPojo returnInfo ;
         CreateOrderDao createOrderDao = new CreateOrderDao();
         Gson gson = new Gson();
@@ -114,20 +115,22 @@ public class OrderApi {
     /**
      * 下单，有图片
      *
-     * @param fileInputStream
-     * @param disposition
-     * @param orderInfoStr
      * @return
      */
     @POST
     @Path("/createorderwithimg")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces("text/plain;charset=utf-8")
-    public String cteateOrderWithImgURL(@FormDataParam("photos") InputStream fileInputStream,
-                                 @FormDataParam("photos") FormDataContentDisposition disposition,
-                                 @FormDataParam("orderinfo") String orderInfoStr) {
+    public String createOrderWithImgURL(@FormDataParam("photos") FormDataBodyPart photos,
+//            @FormDataParam("photos") InputStream fileInputStream,
+//                                 @FormDataParam("photos") FormDataContentDisposition disposition,
+                                 @FormDataParam("orderinfo") FormDataBodyPart orderInfoStrpart) {
         ReturnInfoPojo returnInfo = new ReturnInfoPojo();
-        String imageName = disposition.getFileName();
+//        String imageName = disposition.getFileName();
+        String orderInfoStr=orderInfoStrpart.getValueAs(String.class);
+        System.out.println(orderInfoStr);
+        String imageName=photos.getFormDataContentDisposition().getFileName();
+        InputStream fileInputStream=photos.getValueAs(InputStream.class);
         System.out.println("图片名称：" + imageName);
         Gson gson = new Gson();
         imageName = Calendar.getInstance().getTimeInMillis() + imageName;

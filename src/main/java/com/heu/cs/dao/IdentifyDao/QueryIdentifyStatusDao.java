@@ -21,14 +21,14 @@ public class QueryIdentifyStatusDao {
         MongoCursor<Document> cursor=collection.find(filter).iterator();
         if(cursor.hasNext()){
             Document d=cursor.next();
-            status=d.getString("status");
+            status=d.getString("identifyStatus");
         }else {
             status="-1";
-            collection.insertOne(filter.append("status","-1"));
+            collection.insertOne(filter.append("identifyStatus","-1"));
         }
+        returnInfoPojo.setStatus(status);
         cursor.close();
         connMongoDB.getMongoClient().close();
-        returnInfoPojo.setStatus(status);
         return gson.toJson(returnInfoPojo,ReturnInfoPojo.class);
     }
 }

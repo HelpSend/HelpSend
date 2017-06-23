@@ -23,6 +23,7 @@ import org.bson.Document;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -67,6 +68,7 @@ public class TencentYouTuImpl implements TencentYouTu {
     @Override
     public String ocrIdCard(String textInfo, String[] idcardPathList,String[] nameList) {
         Gson gson = new Gson();
+        ReturnInfoPojo returnInfoPojo=new ReturnInfoPojo();
         TextInfoPojo textInfoPojo = gson.fromJson(textInfo, TextInfoPojo.class);
         String[] keylist = getAPPKey();
         ImageClient imageClient = new ImageClient(Integer.parseInt(keylist[0]), keylist[1], keylist[2]);
@@ -101,21 +103,36 @@ public class TencentYouTuImpl implements TencentYouTu {
         if(isValidDate(idCardBackResultPojo.getData().getValid_date())) {
             if (idCardFaceResultPojo.getData().getName().equals(textInfoPojo.getName()) &&
                     idCardFaceResultPojo.getData().getId().equals(textInfoPojo.getIdCard())) {
-                insertTextInfo(textInfoPojo, textInfo,idcardPathList);
+                insertIdentifyInfo(textInfoPojo, textInfo,idcardPathList);
+                returnInfoPojo.setStatus("0");
+                returnInfoPojo.setMessage("上传成功");
+            }else {
+                returnInfoPojo.setStatus("-1");
+                returnInfoPojo.setMessage("图片不合格");
             }
+        }else {
+            returnInfoPojo.setStatus("-1");
+            returnInfoPojo.setMessage("身份证逾期");
         }
-        return "0";
+        return gson.toJson(returnInfoPojo,ReturnInfoPojo.class);
     }
 
 
 
-    private void insertTextInfo( TextInfoPojo textInfoPojo,String textInfo,String[] idcardPathList){
+    private void insertIdentifyInfo( TextInfoPojo textInfoPojo,String textInfo,String[] idcardPathList){
         ConnMongoDB connMongoDB=new ConnMongoDB();
         MongoCollection collection=connMongoDB.getCollection("bbddb","identify");
         Document filter=new Document("userId",textInfoPojo.getUserId());
         Document update=Document.parse(textInfo);
-        update.append("status","0").append("idCardPathList",idcardPathList);
-        collection.updateOne(filter,new Document("$set",update));
+        List<String > list=new ArrayList<>();
+        list.add(idcardPathList[0]);
+        list.add(idcardPathList[1]);
+        list.add(idcardPathList[2]);
+        update.append("identifyStatus","0").append("idCardPathList",list);
+        collection.findOneAndUpdate(filter,new Document("$set",update));
+        MongoCollection usercollection=connMongoDB.getCollection("bbddb","user");
+        Document updateuser=new Document("identifyStatus","0");
+        usercollection.updateOne(filter,new Document("$set",updateuser));
         connMongoDB.getMongoClient().close();
     }
 

@@ -59,6 +59,8 @@ public class FormatUserData {
                 jsonObject.addProperty(s,"0");
             }else if(s.equals("experience")){
                 jsonObject.addProperty(s,0);
+            }else if(s.equals("identifyStatus")){
+                jsonObject.addProperty(s,"-1");
             }
             else {
                 jsonObject.addProperty(s,"");

@@ -1,6 +1,7 @@
 package com.heu.cs.api;
 
 import com.google.gson.Gson;
+import com.heu.cs.dao.IdentifyDao.GetIdentifyInfoDao;
 import com.heu.cs.dao.IdentifyDao.QueryIdentifyStatusDao;
 import com.heu.cs.dao.orderdao.CreateOrderDao;
 
@@ -21,9 +22,7 @@ import javax.ws.rs.core.UriInfo;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Calendar;
-import java.util.List;
-import java.util.SimpleTimeZone;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -48,12 +47,12 @@ public class IdentifyApi {
     }
 
     @POST
-    @Path("/getidentifyinfo")
+    @Path("/getidentifyinfolist")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces("text/plain;charset=utf-8")
-    public void cteateOrderWithImgURL(@FormDataParam("textInfo") String textInfo,
+    public String  getIdentifyInfoListURL(@FormDataParam("textInfo") String textInfo,
                                         FormDataMultiPart formDataMultiPart) {
-        List<FormDataBodyPart> list= formDataMultiPart.getFields("file");
+        List<FormDataBodyPart> list= formDataMultiPart.getFields("pic");
 
         UploadFile uploadFile=new UploadFileImpl();
         String ROOTPATH = System.getProperty("user.dir");
@@ -70,8 +69,73 @@ public class IdentifyApi {
             nameList[i]=fileName;
         }
         TencentYouTu tencentYouTu=new TencentYouTuImpl();
-        tencentYouTu.ocrIdCard(textInfo,identifyImagesPathList,nameList);
+        return tencentYouTu.ocrIdCard(textInfo,identifyImagesPathList,nameList);
     }
+
+
+
+    @POST
+    @Path("/getidentifyinfo2")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces("text/plain;charset=utf-8")
+    public void getIdentifyInfotest2URL(@FormDataParam("textInfo") String textInfo,
+                                       @FormDataParam("pic") FormDataBodyPart idcardFace,
+                                       @FormDataParam("pic") FormDataBodyPart idcardBack,
+                                       @FormDataParam("pic") FormDataBodyPart realHead,
+                                       FormDataMultiPart formDataMultiPart) {
+        GetIdentifyInfoDao getIdentifyInfoDao=new GetIdentifyInfoDao();
+        getIdentifyInfoDao.getIdentify(textInfo,formDataMultiPart);
+    }
+
+
+
+    @POST
+    @Path("/getidentifyinfo")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces("text/plain;charset=utf-8")
+    public String  getIdentifyInfoURL(
+                                       @FormDataParam("idcardFace") FormDataBodyPart idcardFace,
+                                       @FormDataParam("idcardBack") FormDataBodyPart idcardBack,
+                                       @FormDataParam("realHead") FormDataBodyPart realHead,
+                                       FormDataMultiPart formDataMultiPart,
+                                       @FormDataParam("textInfo") String t,
+                                       @FormDataParam("textInfo") FormDataBodyPart textInfoPart) {
+
+        System.out.println("测试123");
+        Map<String, List<FormDataBodyPart>> fields=formDataMultiPart.getFields();
+        System.out.println("测试456");
+        for (Map.Entry<String , List<FormDataBodyPart>> entry : fields.entrySet()) {
+
+            System.out.println("Key=" + entry.getKey() + ",ValueSize=" + entry.getValue().size());
+
+        }
+        System.out.println("测试789");
+        System.out.println(":textinfo:::"+t);
+        List<FormDataBodyPart> list= new ArrayList<>();
+        list.add(idcardFace);
+        list.add(idcardBack);
+        list.add(realHead);
+        UploadFile uploadFile=new UploadFileImpl();
+        String ROOTPATH = System.getProperty("user.dir");
+        String RESOURCE_DIR="/src/main/identify_images/";
+        String imageDir=ROOTPATH+RESOURCE_DIR;
+        String[] identifyImagesPathList=new String[3];
+        String[] nameList=new String[3];
+        for(int i=0;i<list.size();i++){
+            FormDataBodyPart part=list.get(i);
+            String fileName=part.getContentDisposition().getFileName();
+            InputStream inputStream=part.getValueAs(InputStream.class);
+            uploadFile.uploadAndCompressImage(inputStream,imageDir,fileName);
+            identifyImagesPathList[i]=imageDir+fileName;
+            nameList[i]=fileName;
+        }
+
+        String textInfo=textInfoPart.getValueAs(String.class);
+        TencentYouTu tencentYouTu=new TencentYouTuImpl();
+        return tencentYouTu.ocrIdCard(textInfo,identifyImagesPathList,nameList);
+
+    }
+
 
     /**
      * 根据id查询认证状态

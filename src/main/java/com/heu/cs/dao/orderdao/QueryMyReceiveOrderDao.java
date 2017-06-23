@@ -11,6 +11,7 @@ import com.mongodb.client.MongoCursor;
 import org.bson.Document;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by memgq on 2017/6/5.
@@ -25,6 +26,11 @@ public class QueryMyReceiveOrderDao {
         Document filter=new Document();
         if(orderStatus.equals("all")){
             filter.append("orderReceiverId", orderReceiverId);
+        }else if(orderStatus.equals("0")){
+            List<Document> list = new ArrayList<Document>();
+            list.add(new Document("orderStatus","0"));
+            list.add(new Document("orderStatus","1"));
+            filter.append("orderReceiverId",orderReceiverId).append("$or",list);
         }else {
             filter.append("orderReceiverId", orderReceiverId).append("orderStatus", orderStatus);
         }

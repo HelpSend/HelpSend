@@ -2,8 +2,7 @@ package com.heu.cs.jettyserver;
 
 
 import org.apache.log4j.BasicConfigurator;
-import org.eclipse.jetty.server.Handler;
-import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -48,7 +47,23 @@ public class JettyServerStart {
 
 
         BasicConfigurator.configure();
-        Server jettyServer = new Server(7012);
+        Server jettyServer = new Server();
+        HttpConfiguration http_config = new HttpConfiguration();
+//        http_config.setSecureScheme("https");
+//        http_config.setSecurePort(8443);
+//        http_config.setOutputBufferSize(32768);
+//        http_config.setRequestHeaderSize(8192);
+//        http_config.setResponseHeaderSize(8192);
+        http_config.setSendServerVersion(true);
+        http_config.setSendDateHeader(false);
+        ServerConnector http = new ServerConnector(jettyServer,
+                new HttpConnectionFactory(http_config));
+        http.setPort(7012);
+        http.setIdleTimeout(120000);
+        jettyServer.addConnector(http);
+
+
+
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
         ServletHolder jerseyServlet = context.addServlet(
@@ -77,7 +92,6 @@ public class JettyServerStart {
        // handlers.setHandlers(new Handler[]{context,appContext});
         handlers.setHandlers(new Handler[]{context});
         jettyServer.setHandler(handlers);
-
         try {
             jettyServer.start();
             jettyServer.join();

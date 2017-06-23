@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form id="classForm" method="post" enctype="multipart/form-data" action="/webapi/identify/getidentifyinfo">
+
+    <fieldset>
+        <legend>请尽量填写完整这些信息。</legend>
+
+        <p>
+
+            <input type="text" id="text" class="half" value='' name="textInfo"/>
+            <small>例如:今天的课太无聊啦！</small>
+        </p>
+
+        <div id="files1">
+            <p>
+                <label class="required" for="file">图片:</label><br/>
+                <input type="file" id="file" class="half" value='' name="idcardFace"/>
+            </p>
+
+        </div>
+        <div id="files2">
+            <p>
+                <label class="required" for="file">图片:</label><br/>
+                <input type="file" id="file" class="half" value='' name="idcardBack"/>
+            </p>
+
+        </div>
+        <div id="files3">
+            <p>
+                <label class="required" for="file">图片:</label><br/>
+                <input type="file" id="file" class="half" value='' name="realHead"/>
+            </p>
+
+        </div>
+        <div id="addition"></div>
+        <label class="btn" onclick="addMore();">不够！我还要添加图片</label>
+<input type="submit" value="提交">
+
+
+
+
+
+
+
+
+
+    </fieldset>
+
+</form>
+</body>
+<script>
+    function addMore() {
+        var html=$("#files").html();
+        var html2=$("#addition").html();
+        html2+=html;
+        $("#addition").html(html2);
+    }
+</script>
+</html>

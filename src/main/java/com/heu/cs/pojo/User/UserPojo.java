@@ -26,6 +26,15 @@ public class UserPojo {
     private String createDate;
     private int experience=0;
     private String score;
+    private String identifyStatus="-1";
+
+    public String getIdentifyStatus() {
+        return identifyStatus;
+    }
+
+    public void setIdentifyStatus(String identifyStatus) {
+        this.identifyStatus = identifyStatus;
+    }
 
     public String getCreateDate() {
         return createDate;
